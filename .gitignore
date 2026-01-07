@@ -49,4 +49,7 @@ Thumbs.db
 # Logs
 *.log
 
+# Files
+.IMPLEMENTATION_SUMMARY.md
+
 
