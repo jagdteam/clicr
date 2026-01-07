@@ -10,6 +10,7 @@ from typing import List, Dict, Optional
 from dotenv import load_dotenv
 import cohere
 import chromadb
+from history import HistoryManager
 
 # Load environment variables
 load_dotenv()
@@ -25,8 +26,14 @@ TOP_K_RESULTS = 5
 class CodebaseChat:
     """Main chat interface for interacting with the codebase."""
 
-    def __init__(self):
-        """Initialize the chat interface with Cohere and ChromaDB clients."""
+    def __init__(self, enable_history: bool = True, session_name: Optional[str] = None):
+        """
+        Initialize the chat interface with Cohere and ChromaDB clients.
+
+        Args:
+            enable_history: Whether to enable conversation history tracking
+            session_name: Optional name for the chat session
+        """
         # Check for API key
         self.api_key = os.getenv('COHERE_API_KEY')
         if not self.api_key:
@@ -51,6 +58,15 @@ class CodebaseChat:
                 print(f"❌ Error: Could not find collection '{COLLECTION_NAME}'")
                 print("   Please run 'python ingest.py' first to index your codebase")
                 sys.exit(1)
+
+            # Initialize history manager
+            self.enable_history = enable_history
+            self.history_manager = HistoryManager() if enable_history else None
+            self.session_id = None
+            
+            if enable_history:
+                self.session_id = self.history_manager.create_session(session_name)
+                print(f"📝 Session started: {self.session_id}")
 
         except Exception as e:
             print(f"❌ Error initializing chat interface: {e}")
@@ -138,11 +154,22 @@ class CodebaseChat:
             Chat response object
         """
         try:
-            # Build context-aware message
+            # Get conversation history if enabled
+            chat_history = []
+            if self.enable_history and self.session_id:
+                history_messages = self.history_manager.get_conversation_history(self.session_id)
+                # Convert to Cohere format
+                chat_history = [
+                    {"role": msg["role"].upper(), "message": msg["content"]}
+                    for msg in history_messages
+                ]
+            
+            # Build context-aware message with history
             response = self.cohere_client.chat(
                 message=query,
                 model=COHERE_CHAT_MODEL,
                 documents=documents,  # Formal documents parameter for citations
+                chat_history=chat_history if chat_history else None,
                 temperature=0.3,
             )
             return response
@@ -206,6 +233,8 @@ class CodebaseChat:
         print("=" * 60)
         print("Ask questions about your codebase!")
         print("Type 'exit' or 'quit' to end the session.")
+        if self.enable_history:
+            print("Type '/export' to export this session to markdown.")
         print("=" * 60 + "\n")
 
         while True:
@@ -215,12 +244,31 @@ class CodebaseChat:
 
                 # Check for exit commands
                 if query.lower() in ['exit', 'quit', 'q']:
+                    if self.enable_history and self.session_id:
+                        print(f"\n💾 Session saved: {self.session_id}")
+                        print(f"   View history with: python main.py --view-session {self.session_id}")
                     print("\n👋 Goodbye!")
                     break
+
+                # Check for export command
+                if query.lower() == '/export':
+                    if self.enable_history and self.session_id:
+                        try:
+                            export_path = self.history_manager.export_session_markdown(self.session_id)
+                            print(f"\n✅ Session exported to: {export_path}")
+                        except Exception as e:
+                            print(f"\n❌ Export failed: {e}")
+                    else:
+                        print("\n⚠️  History tracking is disabled")
+                    continue
 
                 # Skip empty queries
                 if not query:
                     continue
+
+                # Save user message to history
+                if self.enable_history and self.session_id:
+                    self.history_manager.add_message(self.session_id, "user", query)
 
                 print("\n🔍 Searching codebase...")
 
@@ -250,8 +298,25 @@ class CodebaseChat:
                 # Step 5: Print response with citations
                 self.print_response(response, results)
 
+                # Save assistant message and log query to history
+                if self.enable_history and self.session_id:
+                    seen_files = set()
+                    sources = []
+                    for metadata in results['metadatas'][0]:
+                        file_path = metadata['file_path']
+                        if file_path not in seen_files:
+                            seen_files.add(file_path)
+                            sources.append(file_path)
+                    
+                    self.history_manager.add_message(
+                        self.session_id, "assistant", response.text, sources
+                    )
+                    self.history_manager.log_query(query, response.text, sources)
+
             except KeyboardInterrupt:
-                print("\n\n👋 Goodbye!")
+                if self.enable_history and self.session_id:
+                    print(f"\n\n💾 Session saved: {self.session_id}")
+                print("\n👋 Goodbye!")
                 break
             except Exception as e:
                 print(f"\n⚠️  Error: {e}")
@@ -262,7 +327,16 @@ class CodebaseChat:
 def main():
     """Entry point for CLI."""
     try:
-        chat = CodebaseChat()
+        # Parse command line arguments
+        enable_history = True
+        session_name = None
+        
+        if len(sys.argv) > 1 and sys.argv[1] == '--no-history':
+            enable_history = False
+        elif len(sys.argv) > 2 and sys.argv[1] == '--session':
+            session_name = sys.argv[2]
+        
+        chat = CodebaseChat(enable_history=enable_history, session_name=session_name)
         chat.chat_loop()
     except KeyboardInterrupt:
         print("\n\n👋 Goodbye!")
