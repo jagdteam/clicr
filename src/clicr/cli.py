@@ -641,6 +641,72 @@ def doctor(
 
 
 @app.command(name="export-web")
-def export_web() -> None:
-    """Export the index for the web demo."""
-    _stub("export-web")
+def export_web(
+    path: Annotated[Path, typer.Option("--path", help="Indexed folder.")],
+    out: Annotated[Path, typer.Option("--out", help="Bundle folder to write.")],
+    questions: Annotated[
+        Path | None,
+        typer.Option("--questions", help="JSON list of suggested questions (strings or objects)."),
+    ] = None,
+    record: Annotated[
+        bool, typer.Option("--record", help="Answer each question with the chat model and keep it.")
+    ] = False,
+    parity_suite: Annotated[
+        str | None,
+        typer.Option("--parity-suite", help="Eval suite: pins the source, writes parity.json."),
+    ] = None,
+    max_mb: Annotated[float, typer.Option("--max-mb", help="Fail above this bundle size.")] = 3.0,
+) -> None:
+    """Export a fastembed index as a static bundle for the browser demo."""
+    from contextlib import nullcontext
+
+    from clicr.eval.suites import DATASET_DIR, load_items, load_suites
+    from clicr.export_web import export_web as build_bundle
+    from clicr.providers import embedder_from_name
+
+    root = path.resolve()
+    with _friendly_errors():
+        if record and questions is None:
+            raise UserError("--record needs --questions.")
+        items = None
+        source = None
+        if parity_suite is not None:
+            suites = load_suites()
+            if parity_suite not in suites:
+                raise UserError(f"Unknown suite {parity_suite!r}; known: {', '.join(suites)}")
+            dataset = DATASET_DIR / f"{parity_suite}.jsonl"
+            if not dataset.is_file():
+                raise UserError(f"Dataset not found: {dataset}")
+            items = load_items(dataset)
+            source = {"name": parity_suite, **suites[parity_suite]}
+        asked = None
+        if questions is not None:
+            try:
+                asked = json.loads(questions.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                raise UserError(f"Cannot read --questions {questions}: {exc}") from None
+            if not isinstance(asked, list):
+                raise UserError("--questions must be a JSON list.")
+        settings = load_settings(root, {})
+        _note_providers(settings)
+        opened = _open_answerer(str(root), "hybrid", None, None, {}) if record else nullcontext()
+        with opened as opened_answerer:
+            answerer = opened_answerer[0] if record else None
+            manifest = build_bundle(
+                root,
+                out,
+                embedder_factory=lambda name: (
+                    answerer.retriever.embedder if answerer else embedder_from_name(name, settings)
+                ),
+                source=source,
+                questions=asked,
+                answerer=answerer,
+                parity_items=items,
+                max_mb=max_mb,
+            )
+        sizes = {**manifest["files"]}
+        total = sum(sizes.values()) + (out / "manifest.json").stat().st_size
+        for name, size in sorted(sizes.items()):
+            typer.echo(f"{name}: {size:,} bytes")
+        typer.echo(f"manifest.json: {(out / 'manifest.json').stat().st_size:,} bytes")
+        typer.echo(f"Total: {total:,} bytes ({total / 1024 / 1024:.2f} MB) in {out}")
