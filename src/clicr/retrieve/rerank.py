@@ -9,6 +9,7 @@ from typing import Protocol
 
 from clicr.paths import clicr_home
 from clicr.providers.base import ChatModel, ProviderError
+from clicr.providers.fastembed import onnx_threads
 
 log = logging.getLogger(__name__)
 
@@ -41,7 +42,9 @@ class CrossEncoderReranker:
                 from fastembed.rerank.cross_encoder import TextCrossEncoder
             except ImportError as exc:
                 raise ProviderError("fastembed is not installed. Fix: uv add fastembed") from exc
-            self._encoder = TextCrossEncoder(model_name=self.model, cache_dir=str(self.cache_dir))
+            self._encoder = TextCrossEncoder(
+                model_name=self.model, cache_dir=str(self.cache_dir), threads=onnx_threads()
+            )
         return self._encoder
 
     def score(self, query: str, texts: list[str]) -> list[float]:
