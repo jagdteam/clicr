@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -18,6 +19,12 @@ def _text_embedding_cls():
     return TextEmbedding
 
 
+def onnx_threads() -> int | None:
+    """Thread cap for fastembed's ONNX models from CLICR_ONNX_THREADS (unset = all cores)."""
+    value = os.environ.get("CLICR_ONNX_THREADS", "").strip()
+    return int(value) if value.isdigit() and int(value) > 0 else None
+
+
 class FastEmbedEmbedder:
     def __init__(self, model: str = "BAAI/bge-small-en-v1.5", cache_dir: Path | None = None):
         self.model = model
@@ -29,7 +36,9 @@ class FastEmbedEmbedder:
     @property
     def _model(self):
         if self._te is None:
-            self._te = _text_embedding_cls()(model_name=self.model, cache_dir=str(self.cache_dir))
+            self._te = _text_embedding_cls()(
+                model_name=self.model, cache_dir=str(self.cache_dir), threads=onnx_threads()
+            )
         return self._te
 
     @property
