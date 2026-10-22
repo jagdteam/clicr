@@ -27,3 +27,7 @@ class ChatModel(Protocol):
     def stream(self, messages: list[dict]) -> Iterator[str]: ...
 
     def complete(self, messages: list[dict]) -> str: ...
+
+
+class ProviderError(RuntimeError):
+    """A model provider is unreachable or misconfigured; the message says how to fix it."""

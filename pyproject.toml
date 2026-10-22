@@ -11,6 +11,8 @@ dependencies = [
     "pathspec>=1.1.1",
     "numpy>=2.5.4",
     "tree-sitter-language-pack>=1.22.1",
+    "ollama>=0.6.3",
+    "fastembed>=0.9.0",
 ]
 
 [project.optional-dependencies]
@@ -21,6 +23,7 @@ clicr = "clicr.cli:app"
 
 [dependency-groups]
 dev = [
+    "anthropic>=2.1.0",
     "pytest>=8",
     "ruff>=0.6",
 ]
