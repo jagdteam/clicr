@@ -165,18 +165,19 @@ class SyntaxChunker:
             log.info("%s: no syntax support for %r, using line windows", path_rel, language)
             return self._windows(path_rel, lines, language)
         try:
-            root = self._parse(language, text)
+            tree = self._parse(language, text)
         except Exception as exc:  # noqa: BLE001 - any parser failure means fall back
             log.warning("%s: parse failed (%s), using line windows", path_rel, exc)
             return self._windows(path_rel, lines, language)
-        return self._chunk_tree(path_rel, lines, language, root, LANG_SPECS[language])
+        # `tree` stays referenced in this frame until chunking returns, so its nodes stay valid.
+        return self._chunk_tree(path_rel, lines, language, tree.root_node, LANG_SPECS[language])
 
     # -- parsing -----------------------------------------------------------
     @staticmethod
     def _parse(language: str, text: str) -> Any:
         from tree_sitter_language_pack import get_parser
 
-        return get_parser(language).parse(text.encode("utf-8")).root_node
+        return get_parser(language).parse(text.encode("utf-8"))
 
     # -- structure ---------------------------------------------------------
     def _chunk_tree(

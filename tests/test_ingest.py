@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import gc
 import re
 from pathlib import Path
 
@@ -162,6 +163,26 @@ def test_syntax_fallback_unsupported(caplog: pytest.LogCaptureFixture) -> None:
     assert len(caplog.records) == 1
     assert_invariant(text, chunks)
     assert SyntaxChunker().name == "syntax-120"
+
+
+def test_syntax_chunks_survive_gc() -> None:
+    src = Path(__file__).resolve().parents[1] / "src" / "clicr"
+    files = sorted(src.rglob("*.py"))
+    assert files
+    chunker = SyntaxChunker()
+    first: dict[Path, list[Chunk]] = {}
+    for round_no in range(3):
+        for path in files:
+            text = path.read_text(encoding="utf-8")
+            chunks = chunker.chunk(path.name, text, "python")
+            gc.collect()
+            n_lines = len(text.replace("\r\n", "\n").split("\n"))
+            for c in chunks:
+                assert 1 <= c.start_line <= c.end_line <= n_lines
+            if round_no == 0:
+                first[path] = chunks
+            else:
+                assert chunks == first[path]
 
 
 def test_syntax_gap_between_methods_keeps_class_symbol() -> None:
