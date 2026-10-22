@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import logging
-from bisect import bisect_left
-from dataclasses import dataclass, field
+from bisect import bisect_left, bisect_right
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from clicr.ingest.languages import SYNTAX_LANGUAGES
@@ -95,6 +95,21 @@ LANG_SPECS: dict[str, LangSpec] = {
     ),
 }
 
+# call node type -> field holding the callee (checked against each grammar by parsing)
+CALL_NODES: dict[str, dict[str, str]] = {
+    "python": {"call": "function"},
+    "javascript": {"call_expression": "function"},
+    "typescript": {"call_expression": "function"},
+    "tsx": {"call_expression": "function"},
+    "go": {"call_expression": "function"},
+    "rust": {"call_expression": "function"},
+    "java": {"method_invocation": "name"},
+    "c": {"call_expression": "function"},
+    "cpp": {"call_expression": "function"},
+}
+# fields that lead from an attribute/member/selector/scoped callee to its last name
+_CALLEE_FIELDS = ("attribute", "property", "field", "name", "function", "type")
+
 _METHOD_KINDS = frozenset({"method_definition", "method_declaration"})
 _CLASS_WORDS = ("class", "struct", "interface", "impl", "trait", "enum", "type_declaration")
 
@@ -126,6 +141,51 @@ def _name_of(node: Any) -> str | None:
             return _name_of(child)
         return _text_of(child)
     return None
+
+
+def _callee_name(node: Any) -> str | None:
+    """Last identifier of a callee: `a.b.c` -> `c`, `ns::f` -> `f`, `f` -> `f`."""
+    for _ in range(8):  # callee nesting is shallow; bound it anyway
+        # a plain name is a leaf; scoped/qualified identifiers have parts and recurse
+        if node.type.endswith("identifier") and node.named_child_count == 0:
+            return _text_of(node)
+        for fld in _CALLEE_FIELDS:
+            child = node.child_by_field_name(fld)
+            if child is not None:
+                node = child
+                break
+        else:
+            return None
+    return None
+
+
+def _calls(root: Any, call_nodes: dict[str, str]) -> list[tuple[int, str]]:
+    """(0-based row, called name) for every call in the tree, in source order."""
+    found: list[tuple[int, str]] = []
+    stack = [root]
+    while stack:
+        node = stack.pop()
+        fld = call_nodes.get(node.type)
+        if fld is not None:
+            callee = node.child_by_field_name(fld)
+            name = _callee_name(callee) if callee is not None else None
+            if name:
+                found.append((node.start_point.row, name))
+        stack.extend(reversed(node.children))
+    found.sort(key=lambda item: item[0])  # stable: keeps tree order within a row
+    return found
+
+
+def _with_refs(chunks: list[Chunk], calls: list[tuple[int, str]]) -> list[Chunk]:
+    """Attach to each chunk the distinct names called inside its line span."""
+    rows = [row for row, _ in calls]
+    out: list[Chunk] = []
+    for chunk in chunks:
+        lo = bisect_left(rows, chunk.start_line - 1)
+        hi = bisect_right(rows, chunk.end_line - 1)
+        names = tuple(dict.fromkeys(name for _, name in calls[lo:hi]))
+        out.append(replace(chunk, refs=names) if names else chunk)
+    return out
 
 
 def _unwrap(node: Any, spec: LangSpec) -> Any:
@@ -170,7 +230,8 @@ class SyntaxChunker:
             log.warning("%s: parse failed (%s), using line windows", path_rel, exc)
             return self._windows(path_rel, lines, language)
         # `tree` stays referenced in this frame until chunking returns, so its nodes stay valid.
-        return self._chunk_tree(path_rel, lines, language, tree.root_node, LANG_SPECS[language])
+        chunks = self._chunk_tree(path_rel, lines, language, tree.root_node, LANG_SPECS[language])
+        return _with_refs(chunks, _calls(tree.root_node, CALL_NODES.get(language, {})))
 
     # -- parsing -----------------------------------------------------------
     @staticmethod

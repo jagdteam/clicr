@@ -46,5 +46,8 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["ollama: needs a running Ollama server (opt-in)"]
-addopts = '-m "not ollama"'
+markers = [
+    "ollama: needs a running Ollama server (opt-in)",
+    "fastembed: downloads and runs a fastembed model on CPU (opt-in)",
+]
+addopts = '-m "not ollama and not fastembed"'

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import hashlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
@@ -17,6 +17,8 @@ class Chunk:
     language: str | None
     symbol: str | None
     kind: str
+    # names this chunk calls (code graph); not part of identity or equality
+    refs: tuple[str, ...] = field(default=(), compare=False)
 
     @property
     def id(self) -> str:

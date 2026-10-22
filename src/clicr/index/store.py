@@ -21,7 +21,12 @@ CREATE TABLE IF NOT EXISTS chunks (
 );
 CREATE INDEX IF NOT EXISTS chunks_path ON chunks(path);
 CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(terms);
+CREATE TABLE IF NOT EXISTS symbols (name TEXT, rowid INTEGER);
+CREATE INDEX IF NOT EXISTS symbols_name ON symbols(name);
+CREATE TABLE IF NOT EXISTS refs (rowid INTEGER, name TEXT);
+CREATE INDEX IF NOT EXISTS refs_rowid ON refs(rowid);
 """
+SCHEMA_VERSION = "2"  # bump when the tables change: older indexes then rebuild
 
 _COLUMNS = "rowid, path, start_line, end_line, text, language, symbol, kind"
 
@@ -54,6 +59,7 @@ class IndexStore:
             "dim": str(dim),
             "chunker": chunker_name,
             "header": str(int(header)),
+            "schema": SCHEMA_VERSION,
         }
         store = cls(conn, expected)
         stored = dict(conn.execute("SELECT key, value FROM meta"))
@@ -90,7 +96,7 @@ class IndexStore:
 
     def reset(self) -> None:
         with self._conn:
-            for table in ("chunks_fts", "chunks", "files", "meta"):
+            for table in ("chunks_fts", "symbols", "refs", "chunks", "files", "meta"):
                 self._conn.execute(f"DELETE FROM {table}")
         self._write_meta()
         self.compatible = True
@@ -118,6 +124,15 @@ class IndexStore:
                     "INSERT INTO chunks_fts(rowid, terms) VALUES (?, ?)",
                     (cur.lastrowid, search_terms(_fts_text(chunk))),
                 )
+                if chunk.symbol:
+                    self._conn.execute(
+                        "INSERT INTO symbols(name, rowid) VALUES (?, ?)",
+                        (_short_name(chunk.symbol), cur.lastrowid),
+                    )
+                self._conn.executemany(
+                    "INSERT INTO refs(rowid, name) VALUES (?, ?)",
+                    [(cur.lastrowid, name) for name in chunk.refs],
+                )
             self._conn.execute(
                 "INSERT OR REPLACE INTO files(path, sha256, mtime, n_chunks) VALUES (?,?,?,?)",
                 (path, sha256, mtime, len(chunks)),
@@ -131,10 +146,11 @@ class IndexStore:
         self._cache = None
 
     def _delete_chunks(self, path: str) -> None:
-        self._conn.execute(
-            "DELETE FROM chunks_fts WHERE rowid IN (SELECT rowid FROM chunks WHERE path = ?)",
-            (path,),
-        )
+        for table in ("chunks_fts", "symbols", "refs"):
+            self._conn.execute(
+                f"DELETE FROM {table} WHERE rowid IN (SELECT rowid FROM chunks WHERE path = ?)",
+                (path,),
+            )
         self._conn.execute("DELETE FROM chunks WHERE path = ?", (path,))
 
     # -- reads -------------------------------------------------------------
@@ -153,8 +169,22 @@ class IndexStore:
             if row is None:
                 continue
             rid, path, start, end, text, language, symbol, kind = row
-            out.append((rid, Chunk(path, start, end, text, language, symbol, kind)))
+            # refs keep call order: their insertion order (the hidden _rowid_)
+            refs = tuple(
+                name
+                for (name,) in self._conn.execute(
+                    "SELECT name FROM refs WHERE rowid = ? ORDER BY _rowid_", (rid,)
+                )
+            )
+            out.append((rid, Chunk(path, start, end, text, language, symbol, kind, refs)))
         return out
+
+    def definitions(self, name: str) -> list[int]:
+        """Rowids of the chunks that define `name` (short name), in index order."""
+        rows = self._conn.execute(
+            "SELECT rowid FROM symbols WHERE name = ? ORDER BY rowid", (name,)
+        ).fetchall()
+        return [int(r[0]) for r in rows]
 
     # -- search ------------------------------------------------------------
     def vector_matrix(self) -> tuple[np.ndarray, np.ndarray]:
@@ -194,6 +224,11 @@ class IndexStore:
             (match, k),
         ).fetchall()
         return [(int(rid), -float(score)) for rid, score in rows]
+
+
+def _short_name(symbol: str) -> str:
+    """`Class.method` -> `method`: calls name the last segment."""
+    return symbol.rsplit(".", 1)[-1]
 
 
 def _fts_text(chunk: Chunk) -> str:
