@@ -98,3 +98,31 @@ def test_empty_env_is_unset(monkeypatch):
     monkeypatch.setenv("CLICR_HEADER", "")
     s = load_settings(None, {})
     assert s.top_k == 6 and s.header is True
+
+
+def test_retrieval_switch_defaults_are_off():
+    s = load_settings(None, {})
+    assert (s.rerank, s.graph, s.hyde, s.abstain_threshold) == ("none", False, False, None)
+    assert s.rerank_model == "Xenova/ms-marco-MiniLM-L-6-v2"
+    assert (s.rerank_pool, s.graph_budget, s.context_tokens) == (30, 3, 5000)
+
+
+def test_retrieval_switches_from_env_and_toml(tmp_path, monkeypatch):
+    (tmp_path / "repo" / "clicr.toml").write_text('rerank = "cross"\ngraph = true\n')
+    monkeypatch.setenv("CLICR_ABSTAIN_THRESHOLD", "0.35")
+    monkeypatch.setenv("CLICR_HYDE", "yes")
+    s = load_settings(tmp_path / "repo", {})
+    assert (s.rerank, s.graph, s.hyde) == ("cross", True, True)
+    assert s.abstain_threshold == pytest.approx(0.35)
+    assert load_settings(tmp_path / "repo", {"rerank": "llm"}).rerank == "llm"
+
+
+def test_retrieval_switch_validation(monkeypatch):
+    with pytest.raises(ConfigError, match="rerank"):
+        load_settings(None, {"rerank": "magic"})
+    with pytest.raises(ConfigError, match="abstain_threshold"):
+        load_settings(None, {"abstain_threshold": "high"})
+    with pytest.raises(ConfigError, match="rerank_pool"):
+        load_settings(None, {"rerank_pool": 0})
+    with pytest.raises(ConfigError, match="graph_budget"):
+        load_settings(None, {"graph_budget": -1})

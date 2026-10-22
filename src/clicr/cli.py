@@ -10,6 +10,7 @@ from typing import Annotated, Literal
 
 import typer
 from rich.console import Console
+from rich.markup import escape
 from rich.table import Table
 
 from clicr import __version__
@@ -159,6 +160,27 @@ def ask(
         str | None, typer.Option("--embed-provider", help="ollama, fastembed or fake.")
     ] = None,
     embed_model: Annotated[str | None, typer.Option("--embed-model")] = None,
+    rerank: Annotated[
+        str | None,
+        typer.Option("--rerank", help="Rerank the fused candidates: none, cross or llm."),
+    ] = None,
+    graph: Annotated[
+        bool | None,
+        typer.Option(
+            "--graph/--no-graph", help="Add definitions of functions the top chunks call."
+        ),
+    ] = None,
+    hyde: Annotated[
+        bool | None,
+        typer.Option("--hyde/--no-hyde", help="Search with a model-drafted hypothetical snippet."),
+    ] = None,
+    abstain_threshold: Annotated[
+        float | None,
+        typer.Option("--abstain-threshold", help="Answer 'not found' below this best score."),
+    ] = None,
+    explain: Annotated[
+        bool, typer.Option("--explain", help="Show how every candidate was ranked.")
+    ] = False,
 ) -> None:
     """Ask a single question about the indexed codebase."""
     from clicr.answer.engine import Answerer, DoneEvent, RetrievedEvent, TokenEvent
@@ -189,6 +211,10 @@ def ask(
                 chat_model=chat_model,
                 embed_provider=embed_provider,
                 embed_model=embed_model,
+                rerank=rerank,
+                graph=graph,
+                hyde=hyde,
+                abstain_threshold=abstain_threshold,
             ),
         )
         stored = stored_embedder
@@ -219,14 +245,26 @@ def ask(
             if store.count() == 0:
                 raise _fail(f"The index for {root} is empty. Run: clicr index {root}")
             cfg = SearchConfig(
-                mode=mode, top_k=settings.top_k, k_candidates=max(20, settings.top_k)
+                mode=mode,
+                top_k=settings.top_k,
+                k_candidates=max(20, settings.top_k),
+                rerank=settings.rerank,  # validated by _CHOICES in config
+                rerank_model=settings.rerank_model,
+                rerank_pool=settings.rerank_pool,
+                graph=settings.graph,
+                graph_budget=settings.graph_budget,
+                hyde=settings.hyde,
+                abstain_threshold=settings.abstain_threshold,
+                context_tokens=settings.context_tokens,
             )
-            answerer = Answerer(Retriever(store, embedder, chat, cfg), chat)
+            answerer = Answerer(Retriever(store, embedder, chat, cfg), chat, root=root)
             sources = []
             done = None
             for event in answerer.ask_stream(question):
                 if isinstance(event, RetrievedEvent):
-                    sources = event.result.candidates
+                    sources = event.sources
+                    if explain:
+                        console.print(_explain_table(event.result, sources))
                 elif isinstance(event, TokenEvent):
                     typer.echo(event.text, nl=False)
                 elif isinstance(event, DoneEvent):
@@ -247,6 +285,45 @@ def ask(
         if rep.invalid:
             line += f" (invalid: {', '.join(map(str, rep.invalid))})"
         typer.echo(line)
+
+
+def _explain_table(result, sources) -> Table:
+    """Every candidate with its rank at each stage and the source number it got (or -)."""
+    source_of: dict[int, int] = {}
+    for n, cand in enumerate(sources, start=1):
+        for rowid in cand.trace.get("merged_from", [cand.rowid]):
+            source_of.setdefault(rowid, n)
+    rows = list(result.pool)
+    in_pool = {c.rowid for c in rows}
+    rows += [c for c in result.candidates if c.rowid not in in_pool]  # graph additions
+
+    def show(value: object) -> str:
+        return "-" if value is None else str(value)
+
+    title = "retrieval explain"
+    if result.abstained:
+        title += f" (abstained: best score {result.abstain_signal:.3f})"
+    table = Table(title=title)
+    for name in ("path:lines", "symbol", "vector rank", "keyword rank", "fused rank"):
+        table.add_column(name)
+    for name in ("rerank score", "graph via", "source"):
+        table.add_column(name)
+    for cand in rows:
+        c = cand.chunk
+        rerank = cand.trace.get("rerank")
+        graph = cand.trace.get("graph")
+        fuse = cand.trace.get("fuse")
+        table.add_row(
+            escape(f"{c.path}:{c.start_line}-{c.end_line}"),
+            escape(c.symbol or "-"),
+            show(cand.vector_rank),
+            show(cand.keyword_rank),
+            show(fuse["fused_rank"] if isinstance(fuse, dict) else None),
+            f"{rerank['rerank_score']:.3f}" if isinstance(rerank, dict) else "-",
+            escape(str(graph["via"])) if isinstance(graph, dict) else "-",
+            show(source_of.get(cand.rowid)),
+        )
+    return table
 
 
 @app.command()

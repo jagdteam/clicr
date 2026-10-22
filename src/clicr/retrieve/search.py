@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 Mode = Literal["vector", "keyword", "hybrid"]
+RerankKind = Literal["none", "cross", "llm"]
 Fused = tuple[int, float, int | None, float | None, int | None, float | None]
 
 
@@ -15,6 +16,15 @@ class SearchConfig:
     k_candidates: int = 20
     rrf_k: int = 60
     top_k: int = 6
+    # advanced stages: each one is off by default
+    rerank: RerankKind = "none"
+    rerank_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
+    rerank_pool: int = 30
+    graph: bool = False
+    graph_budget: int = 3
+    hyde: bool = False
+    abstain_threshold: float | None = None
+    context_tokens: int = 5000  # prompt budget for sources; 0 = no packing
 
 
 def rrf_fuse(
