@@ -194,6 +194,17 @@ def test_walker_root_only_ignores(tmp_path: Path) -> None:
     assert rels(tmp_path) == ["src/bin/a.py"]
 
 
+def test_walker_honours_git_info_exclude(tmp_path: Path) -> None:
+    (tmp_path / ".git" / "info").mkdir(parents=True)
+    (tmp_path / ".git" / "info" / "exclude").write_text("notes/\n*.secret\n", encoding="utf-8")
+    (tmp_path / "notes").mkdir()
+    (tmp_path / "notes" / "a.py").write_text("x = 1\n")
+    (tmp_path / "x.secret").write_text("x = 1\n")
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "b.py").write_text("x = 1\n")
+    assert rels(tmp_path) == ["src/b.py"]
+
+
 def test_crlf_equals_lf() -> None:
     lf = "def f():\n    return 1\n\n\nx = 2\n"
     crlf = lf.replace("\n", "\r\n")

@@ -33,15 +33,18 @@ IGNORE_FILES = frozenset({".DS_Store", "Thumbs.db", ".gitignore", ".dockerignore
 _Specs = list[tuple[str, pathspec.GitIgnoreSpec]]
 
 
-def _load_spec(directory: Path) -> pathspec.GitIgnoreSpec | None:
-    gitignore = directory / ".gitignore"
-    if not gitignore.is_file():
+def _load_spec_file(path: Path) -> pathspec.GitIgnoreSpec | None:
+    if not path.is_file():
         return None
     try:
-        lines = gitignore.read_text(encoding="utf-8", errors="replace").splitlines()
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
     except OSError:
         return None
     return pathspec.GitIgnoreSpec.from_lines(lines)
+
+
+def _load_spec(directory: Path) -> pathspec.GitIgnoreSpec | None:
+    return _load_spec_file(directory / ".gitignore")
 
 
 def _is_ignored(rel_posix: str, specs: _Specs) -> bool:
@@ -88,7 +91,9 @@ def _wanted_file(path: Path, name: str, max_bytes: int) -> bool:
 def iter_files(root: Path, max_bytes: int = 1_000_000) -> Iterator[Path]:
     root = Path(root)
     found: list[Path] = []
-    stack: list[tuple[Path, _Specs]] = [(root, [])]
+    # git's per-repo exclude file goes first so .gitignore files override it, as in git
+    exclude = _load_spec_file(root / ".git" / "info" / "exclude")
+    stack: list[tuple[Path, _Specs]] = [(root, [("", exclude)] if exclude is not None else [])]
     while stack:
         directory, inherited = stack.pop()
         specs = list(inherited)

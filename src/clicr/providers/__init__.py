@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 from clicr.config import Settings
 from clicr.ingest.chunkers import LineChunker, SyntaxChunker
 from clicr.providers.base import ChatModel, Embedder, ProviderError
@@ -21,7 +23,25 @@ def make_embedder(settings: Settings) -> Embedder:
     return OllamaEmbedder(settings.embed_model, host=settings.ollama_host)
 
 
+def embedder_from_name(name: str, settings: Settings) -> Embedder:
+    """Rebuild the embedder an index was made with from its stored name."""
+    if name.startswith("fake-"):
+        from clicr.providers.fake import FakeEmbedder
+
+        return FakeEmbedder(int(name.removeprefix("fake-")))
+    provider, _, model = name.partition(":")
+    if provider == "ollama" and model:
+        return make_embedder(replace(settings, embed_provider="ollama", embed_model=model))
+    if provider == "fastembed" and model:
+        return make_embedder(replace(settings, embed_provider="fastembed", fastembed_model=model))
+    raise ProviderError(f"Unknown embedder {name!r} in the index. Re-run: clicr index --rebuild")
+
+
 def make_chat(settings: Settings) -> ChatModel:
+    if settings.chat_provider == "fake":
+        from clicr.providers.fake import FakeChat
+
+        return FakeChat()
     if settings.chat_provider == "claude":
         from clicr.providers.claude import ClaudeChat
 
@@ -37,4 +57,4 @@ def make_chunker(settings: Settings) -> SyntaxChunker | LineChunker:
     return SyntaxChunker(max_lines=settings.max_lines)
 
 
-__all__ = ["ProviderError", "make_chat", "make_chunker", "make_embedder"]
+__all__ = ["ProviderError", "embedder_from_name", "make_chat", "make_chunker", "make_embedder"]

@@ -63,6 +63,22 @@ class IndexStore:
             store.compatible = stored == expected
         return store
 
+    @staticmethod
+    def read_meta(directory: Path) -> dict[str, str] | None:
+        """Stored index settings, or None if there is no index. Never writes or creates."""
+        db = Path(directory) / "index.sqlite"
+        if not db.is_file():
+            return None
+        try:
+            conn = sqlite3.connect(f"{db.as_uri()}?mode=ro", uri=True)
+            try:
+                meta = dict(conn.execute("SELECT key, value FROM meta"))
+            finally:
+                conn.close()
+        except sqlite3.Error:
+            return None
+        return meta or None
+
     def close(self) -> None:
         self._conn.close()
 

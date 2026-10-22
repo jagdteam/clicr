@@ -2,10 +2,11 @@ import json
 import os
 import sqlite3
 import sys
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
 import typer
 from rich.console import Console
@@ -15,6 +16,7 @@ from clicr import __version__
 from clicr.config import ConfigError, Settings, load_settings
 from clicr.ingest.languages import SYNTAX_LANGUAGES
 from clicr.paths import index_dir_for
+from clicr.providers.base import ProviderError
 
 app = typer.Typer(
     help="CliCR — chat with a local codebase using retrieval-augmented generation.",
@@ -45,16 +47,206 @@ def main(
     """CliCR — chat with a local codebase using retrieval-augmented generation."""
 
 
+def _fail(message: str) -> typer.Exit:
+    typer.echo(message, err=True)
+    return typer.Exit(code=1)
+
+
+def _overrides(**values: object) -> dict[str, object]:
+    return {k: v for k, v in values.items() if v is not None}
+
+
 @app.command()
-def index(path: Annotated[str, typer.Argument(help="Folder to index.")] = ".") -> None:
+def index(
+    path: Annotated[str, typer.Argument(help="Folder to index.")] = ".",
+    chunker: Annotated[
+        str | None, typer.Option("--chunker", help="Chunking strategy: syntax or line.")
+    ] = None,
+    embed_provider: Annotated[
+        str | None, typer.Option("--embed-provider", help="ollama, fastembed or fake.")
+    ] = None,
+    embed_model: Annotated[str | None, typer.Option("--embed-model")] = None,
+    no_header: Annotated[
+        bool, typer.Option("--no-header", help="Do not prepend a path/symbol header to chunks.")
+    ] = False,
+    rebuild: Annotated[
+        bool, typer.Option("--rebuild", help="Discard the existing index and start over.")
+    ] = False,
+) -> None:
     """Index a codebase."""
-    _stub("index")
+    from rich.progress import BarColumn, Progress, TextColumn, TimeElapsedColumn
+
+    from clicr.index.store import IndexStore
+    from clicr.index.updater import update_index
+    from clicr.providers import make_chunker, make_embedder
+
+    root = Path(path).resolve()
+    if not root.is_dir():
+        raise _fail(f"Not a folder: {root}")
+    try:
+        settings = load_settings(
+            root,
+            _overrides(
+                chunker=chunker,
+                embed_provider=embed_provider,
+                embed_model=embed_model,
+                header=False if no_header else None,
+            ),
+        )
+        embedder = make_embedder(settings)
+        chunker_obj = make_chunker(settings)
+        directory = index_dir_for(root)
+        store = IndexStore.open(
+            directory,
+            embedder_name=embedder.name,
+            dim=embedder.dim,
+            chunker_name=chunker_obj.name,
+            header=settings.header,
+        )
+        try:
+            if rebuild:
+                store.reset()
+            started = time.perf_counter()
+            with Progress(
+                TextColumn("{task.description}"),
+                BarColumn(),
+                TextColumn("{task.completed}/{task.total}"),
+                TimeElapsedColumn(),
+                console=console,
+                transient=True,
+            ) as bar:
+                task = bar.add_task("Indexing", total=None)
+
+                def on_progress(_stage: str, done: int, total: int) -> None:
+                    bar.update(task, completed=done, total=total)
+
+                stats = update_index(
+                    root,
+                    store,
+                    chunker_obj,
+                    embedder,
+                    header=settings.header,
+                    progress=on_progress,
+                )
+            elapsed = time.perf_counter() - started
+            total_chunks = store.count()
+        finally:
+            store.close()
+    except (ProviderError, ConfigError) as exc:
+        raise _fail(f"Error: {exc}") from exc
+    typer.echo(
+        f"Indexed {root}: {stats.added} added, {stats.changed} changed, "
+        f"{stats.deleted} deleted, {stats.unchanged} unchanged "
+        f"({stats.chunks_embedded} chunks embedded, {total_chunks} total)"
+    )
+    typer.echo(f"Index: {directory}")
+    typer.echo(f"Elapsed: {elapsed:.1f}s")
 
 
 @app.command()
-def ask(question: Annotated[str, typer.Argument(help="Your question.")]) -> None:
+def ask(
+    question: Annotated[str, typer.Argument(help="Your question.")],
+    path: Annotated[str, typer.Option("--path", help="Indexed folder.")] = ".",
+    top_k: Annotated[int | None, typer.Option("--top-k", help="Chunks to retrieve.")] = None,
+    mode: Annotated[
+        Literal["hybrid", "vector", "keyword"], typer.Option("--mode", help="Retrieval mode.")
+    ] = "hybrid",
+    chat_provider: Annotated[
+        str | None, typer.Option("--chat-provider", help="ollama, claude or fake.")
+    ] = None,
+    chat_model: Annotated[str | None, typer.Option("--chat-model")] = None,
+    embed_provider: Annotated[
+        str | None, typer.Option("--embed-provider", help="ollama, fastembed or fake.")
+    ] = None,
+    embed_model: Annotated[str | None, typer.Option("--embed-model")] = None,
+) -> None:
     """Ask a single question about the indexed codebase."""
-    _stub("ask")
+    from clicr.answer.engine import Answerer, DoneEvent, RetrievedEvent, TokenEvent
+    from clicr.index.store import IndexStore
+    from clicr.providers import embedder_from_name, make_chat, make_embedder
+    from clicr.retrieve.pipeline import Retriever
+    from clicr.retrieve.search import SearchConfig
+
+    root = Path(path).resolve()
+    directory = index_dir_for(root)
+    meta = IndexStore.read_meta(directory)
+    if meta is None:
+        raise _fail(f"No index for {root}. Run: clicr index {root}")
+    try:
+        stored_dim = int(meta["dim"])
+        stored_embedder = meta["embedder"]
+    except (KeyError, ValueError):
+        raise _fail(
+            f"The index for {root} is unreadable or inconsistent. "
+            f"Re-run: clicr index {root} --rebuild"
+        ) from None
+    try:
+        settings = load_settings(
+            root,
+            _overrides(
+                top_k=top_k,
+                chat_provider=chat_provider,
+                chat_model=chat_model,
+                embed_provider=embed_provider,
+                embed_model=embed_model,
+            ),
+        )
+        stored = stored_embedder
+        if embed_provider is not None or embed_model is not None:
+            embedder = make_embedder(settings)
+            if embedder.name != stored:
+                raise _fail(
+                    f"The index for {root} was built with embedder {stored!r}, not "
+                    f"{embedder.name!r}. Re-run: clicr index {root} --rebuild"
+                )
+        else:
+            embedder = embedder_from_name(stored, settings)
+        chat = make_chat(settings)
+        # chunker and header only matter at index time: open with the stored values
+        store = IndexStore.open(
+            directory,
+            embedder_name=stored,
+            dim=stored_dim,
+            chunker_name=meta.get("chunker", ""),
+            header=meta.get("header", "1") == "1",
+        )
+        try:
+            if not store.compatible:
+                raise _fail(
+                    f"The index for {root} is unreadable or inconsistent. "
+                    f"Re-run: clicr index {root} --rebuild"
+                )
+            if store.count() == 0:
+                raise _fail(f"The index for {root} is empty. Run: clicr index {root}")
+            cfg = SearchConfig(
+                mode=mode, top_k=settings.top_k, k_candidates=max(20, settings.top_k)
+            )
+            answerer = Answerer(Retriever(store, embedder, chat, cfg), chat)
+            sources = []
+            done = None
+            for event in answerer.ask_stream(question):
+                if isinstance(event, RetrievedEvent):
+                    sources = event.result.candidates
+                elif isinstance(event, TokenEvent):
+                    typer.echo(event.text, nl=False)
+                elif isinstance(event, DoneEvent):
+                    done = event
+            typer.echo("")
+        finally:
+            store.close()
+    except (ProviderError, ConfigError) as exc:
+        raise _fail(f"Error: {exc}") from exc
+    typer.echo("\nSources:")
+    for n, cand in enumerate(sources, start=1):
+        c = cand.chunk
+        typer.echo(f"[{n}] {c.path}:{c.start_line}-{c.end_line} {c.symbol or ''}".rstrip())
+    if done is not None:
+        rep = done.citations
+        valid = len(rep.cited) - len(rep.invalid)
+        line = f"citations: {valid} valid, {len(rep.invalid)} invalid"
+        if rep.invalid:
+            line += f" (invalid: {', '.join(map(str, rep.invalid))})"
+        typer.echo(line)
 
 
 @app.command()
