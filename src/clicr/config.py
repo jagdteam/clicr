@@ -36,7 +36,7 @@ class Settings:
         top_k: how many chunks to retrieve per question (>= 1).
     """
 
-    chat_provider: str = "ollama"  # ollama | claude
+    chat_provider: str = "ollama"  # ollama | claude | fake (tests only)
     chat_model: str = "qwen2.5-coder:7b"
     claude_model: str = "claude-sonnet-5-5"
     embed_provider: str = "ollama"  # ollama | fastembed | fake
@@ -50,7 +50,7 @@ class Settings:
 
 
 _CHOICES = {
-    "chat_provider": ("ollama", "claude"),
+    "chat_provider": ("ollama", "claude", "fake"),
     "embed_provider": ("ollama", "fastembed", "fake"),
     "chunker": ("syntax", "line"),
 }
