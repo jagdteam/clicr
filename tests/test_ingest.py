@@ -215,3 +215,14 @@ def test_crlf_equals_lf() -> None:
         assert [c.id for c in a] == [c.id for c in b]
     cr = LineChunker(10, 2).chunk("a.py", "a\rb\rc\r", None)
     assert cr == LineChunker(10, 2).chunk("a.py", "a\nb\nc\n", None)
+
+
+def test_syntax_repeated_parses_stay_stable() -> None:
+    # Regression: tree-sitter 0.26.0 crashed (access violation) after a few parses of a big file.
+    src = Path(__file__).resolve().parents[1] / "src" / "clicr" / "cli.py"
+    text = src.read_text(encoding="utf-8")
+    chunker = SyntaxChunker()
+    first = chunker.chunk("cli.py", text, "python")
+    for _ in range(30):
+        assert chunker.chunk("cli.py", text, "python") == first
+    assert all(c.start_line >= 1 for c in first)
