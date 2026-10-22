@@ -11,15 +11,10 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 import sys
-import tomllib
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-SUITES_FILE = ROOT / "eval" / "suites.toml"
-DATASET_DIR = ROOT / "eval" / "datasets"
-SRC_DIR = Path.home() / ".clicr" / "eval-src"
+from clicr.eval.suites import DATASET_DIR, ensure_checkout, load_suites
 
 CATEGORIES = {"lookup", "how", "multi_hop", "unanswerable", "follow_up"}
 REQUIRED = {
@@ -31,18 +26,6 @@ REQUIRED = {
     "reference_answer": str,
     "notes": str,
 }
-
-
-def ensure_checkout(name: str, suite: dict) -> Path:
-    """Clone the suite repo at its pinned commit if it is not already there."""
-    commit = suite["commit"]
-    target = SRC_DIR / f"{name}-{commit[:7]}"
-    if (target / ".git").is_dir():
-        return target
-    SRC_DIR.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["git", "clone", "--quiet", suite["repo"], str(target)], check=True)
-    subprocess.run(["git", "-C", str(target), "checkout", "--quiet", commit], check=True)
-    return target
 
 
 def read_lines(src: Path, rel: str, cache: dict[str, list[str] | None]) -> list[str] | None:
@@ -169,7 +152,7 @@ def main() -> int:
     parser.add_argument("--suite", help="check only this suite")
     args = parser.parse_args()
 
-    suites = tomllib.loads(SUITES_FILE.read_text(encoding="utf-8"))["suites"]
+    suites = load_suites()
     if args.suite:
         if args.suite not in suites:
             print(f"unknown suite {args.suite!r}; known: {', '.join(suites)}")

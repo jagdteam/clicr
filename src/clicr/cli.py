@@ -458,9 +458,51 @@ def chat(
 
 
 @app.command(name="eval")
-def eval_() -> None:
+def eval_(
+    suite: Annotated[str, typer.Option("--suite", help="Suite name from eval/suites.toml.")],
+    retrieval_only: Annotated[
+        bool, typer.Option("--retrieval-only", help="Retrieval metrics only, no answer track.")
+    ] = False,
+    embedders: Annotated[
+        str | None, typer.Option("--embedders", help="Comma-separated embedders (default: all).")
+    ] = None,
+    configs: Annotated[
+        str | None, typer.Option("--configs", help="Comma-separated configs (default: all).")
+    ] = None,
+    answers: Annotated[
+        bool, typer.Option("--answers", help="Also run the answer track on the best row.")
+    ] = False,
+    judge: Annotated[
+        bool, typer.Option("--judge", help="Score the answers with the LLM judge.")
+    ] = False,
+    check: Annotated[
+        bool,
+        typer.Option(
+            "--check",
+            help="Rerun the CPU-only rows; compare with the committed results (exit 1 on drift).",
+        ),
+    ] = False,
+    out: Annotated[
+        str | None,
+        typer.Option("--out", help="Results file (default: eval/results/<suite>.json)."),
+    ] = None,
+) -> None:
     """Run retrieval and answer evaluations."""
-    _stub("eval")
+    from clicr.eval.command import run_command
+
+    with _friendly_errors():
+        code = run_command(
+            suite,
+            retrieval_only=retrieval_only,
+            embedders=embedders,
+            configs=configs,
+            answers=answers,
+            judge=judge,
+            check=check,
+            out=out,
+            console=console,
+        )
+    raise typer.Exit(code=code)
 
 
 Check = tuple[str, str, str]  # (name, status OK|WARN|FAIL, detail)
