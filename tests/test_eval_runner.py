@@ -534,3 +534,26 @@ def test_results_reranker_defaults_to_search_config(checkout: Path, tmp_path: Pa
 
     assert run(tmp_path, OverlapReranker())["models"]["reranker"] == SearchConfig().rerank_model
     assert run(tmp_path / "n", _NamedReranker("some/model"))["models"]["reranker"] == "some/model"
+
+
+def _scored_row(name: str, r5: float, r10: float, mrr: float, final: float) -> dict:
+    overall = {"recall@5": r5, "recall@10": r10, "mrr": mrr, "recall@final": final}
+    return {"config": name, "embedder": "e", "metrics": {"overall": overall}}
+
+
+def test_best_row_prefers_recall_at_5_over_recall_at_10() -> None:
+    rows = [_scored_row("a", 0.5, 0.9, 0.5, 0.5), _scored_row("b", 0.6, 0.7, 0.5, 0.5)]
+    assert runner._best_row(rows) == {"config": "b", "embedder": "e"}
+
+
+def test_best_row_breaks_ties_by_mrr_then_context_recall() -> None:
+    rows = [_scored_row("a", 0.6, 0.7, 0.5, 0.4), _scored_row("b", 0.6, 0.7, 0.5, 0.8)]
+    assert runner._best_row(rows) == {"config": "b", "embedder": "e"}
+    rows = [_scored_row("a", 0.6, 0.7, 0.4, 0.9), _scored_row("b", 0.6, 0.7, 0.5, 0.1)]
+    assert runner._best_row(rows) == {"config": "b", "embedder": "e"}
+    assert (
+        runner._best_row(
+            [_scored_row("a", 0.6, 0.7, 0.5, 0.5), _scored_row("b", 0.6, 0.7, 0.5, 0.5)]
+        )["config"]
+        == "a"
+    )
