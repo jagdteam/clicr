@@ -1,0 +1,879 @@
+{
+  "abstain": {
+    "config": "+rerank",
+    "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+    "f1": 0.6667,
+    "metrics_at_threshold": {
+      "by_category": {
+        "follow_up": {
+          "mrr": 0.5,
+          "n": 1,
+          "recall@10": 1.0,
+          "recall@5": 1.0,
+          "recall@final": 1.0
+        },
+        "how": {
+          "mrr": 0.6286,
+          "n": 7,
+          "recall@10": 0.7619,
+          "recall@5": 0.7619,
+          "recall@final": 0.7619
+        },
+        "lookup": {
+          "mrr": 0.8143,
+          "n": 7,
+          "recall@10": 1.0,
+          "recall@5": 1.0,
+          "recall@final": 1.0
+        },
+        "multi_hop": {
+          "mrr": 0.3444,
+          "n": 3,
+          "recall@10": 0.8889,
+          "recall@5": 0.5,
+          "recall@final": 0.8889
+        }
+      },
+      "overall": {
+        "mrr": 0.6463,
+        "n": 18,
+        "recall@10": 0.8889,
+        "recall@5": 0.8241,
+        "recall@final": 0.8889
+      }
+    },
+    "n_items": 20,
+    "n_unanswerable": 2,
+    "precision": 1.0,
+    "recall": 0.5,
+    "signal": "cross-encoder score",
+    "threshold": -6.49912166595459
+  },
+  "answers": null,
+  "best": {
+    "config": "+rerank",
+    "embedder": "fastembed:BAAI/bge-small-en-v1.5"
+  },
+  "clicr_version": "0.2.0.dev0",
+  "commit": "33d871765c16ebfbcb27bf4b7d593f20ad018a3e",
+  "created": "2026-10-23T05:47:12+00:00",
+  "include": ".",
+  "index_fingerprint": "fc69b92179e97d19943d19f783a192170a085422",
+  "items": [
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3,
+        2
+      ],
+      "id": "clicr-001",
+      "ranked": [
+        "ingest.py:149-201",
+        "config.py:1-73",
+        "ingest.py:1-64",
+        "ingest.py:284-335",
+        "QUICKSTART_NEW.md:121-240",
+        "ingest.py:240-281",
+        "QUICKSTART.md:121-198",
+        "ingest.py:496-576",
+        "ingest.py:204-237",
+        "ingest.py:422-493"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.5,
+      "signal": 4.2718,
+      "timings_ms": {
+        "abstain": 0.0265,
+        "embed_query": 844.6917,
+        "fuse": 0.1287,
+        "keyword": 3.634,
+        "rerank": 8896.8867,
+        "select": 0.3173,
+        "vector": 8.3292
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1,
+        2
+      ],
+      "id": "clicr-002",
+      "ranked": [
+        "ingest.py:123-146",
+        "utils.py:114-151",
+        "README.md:1-120",
+        "QUICKSTART_NEW.md:121-240",
+        "README.md:242-289",
+        "FEATURES.md:241-303",
+        "main.py:1-37",
+        "FEATURES.md:121-239",
+        "chat.py:180-227",
+        "README.md:122-240"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 3.287,
+      "timings_ms": {
+        "abstain": 0.0165,
+        "embed_query": 14.9532,
+        "fuse": 0.1177,
+        "keyword": 5.0669,
+        "rerank": 7877.8565,
+        "select": 0.1004,
+        "vector": 0.1355
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "clicr-003",
+      "ranked": [
+        "chat.py:75-95",
+        "chat.py:97-118",
+        "chat.py:229-324",
+        "README.md:1-120",
+        "config.py:1-73",
+        "chat.py:1-23",
+        "ingest.py:240-281",
+        "README.md:122-240",
+        "validate.py:81-111",
+        "FEATURES.md:241-303"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 3.7065,
+      "timings_ms": {
+        "abstain": 0.016,
+        "embed_query": 13.3494,
+        "fuse": 0.1116,
+        "keyword": 1.2112,
+        "rerank": 7314.8902,
+        "select": 0.094,
+        "vector": 0.1068
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "clicr-004",
+      "ranked": [
+        "ingest.py:338-355",
+        "QUICKSTART_NEW.md:121-240",
+        "QUICKSTART.md:121-198",
+        "FEATURES.md:241-303",
+        "FEATURES.md:121-239",
+        "QUICKSTART_NEW.md:242-360",
+        "README.md:122-240",
+        "QUICKSTART.md:1-120",
+        "README.md:1-120",
+        "SETUP.md:1-95"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": -0.1317,
+      "timings_ms": {
+        "abstain": 0.0127,
+        "embed_query": 27.7529,
+        "fuse": 0.1385,
+        "keyword": 1.78,
+        "rerank": 8479.4978,
+        "select": 0.0815,
+        "vector": 0.9098
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        5
+      ],
+      "id": "clicr-005",
+      "ranked": [
+        "chat.py:229-324",
+        "README.md:122-240",
+        "README.md:1-120",
+        "main.py:133-182",
+        "history.py:168-218",
+        "FEATURES.md:121-239",
+        "FEATURES.md:1-120",
+        "QUICKSTART_NEW.md:361-435",
+        "FEATURES.md:241-303",
+        "main.py:248-329"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.2,
+      "signal": 2.8172,
+      "timings_ms": {
+        "abstain": 0.0166,
+        "embed_query": 10.0464,
+        "fuse": 0.1175,
+        "keyword": 1.7743,
+        "rerank": 7173.1191,
+        "select": 0.1012,
+        "vector": 0.1315
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "clicr-006",
+      "ranked": [
+        "history.py:220-244",
+        "README.md:122-240",
+        "QUICKSTART_NEW.md:121-240",
+        "chat.py:229-324",
+        "QUICKSTART_NEW.md:242-360",
+        "FEATURES.md:121-239",
+        "FEATURES.md:1-120",
+        "QUICKSTART.md:121-198",
+        "QUICKSTART_NEW.md:1-119",
+        "main.py:185-245"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": -5.8454,
+      "timings_ms": {
+        "abstain": 0.0169,
+        "embed_query": 10.9412,
+        "fuse": 0.096,
+        "keyword": 1.56,
+        "rerank": 7743.39,
+        "select": 0.1041,
+        "vector": 0.1311
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "clicr-007",
+      "ranked": [
+        "utils.py:38-68",
+        "QUICKSTART.md:1-120",
+        "validate.py:160-161",
+        "validate.py:1-9",
+        "README.md:1-120",
+        "SETUP.md:1-95",
+        "validate.py:114-129",
+        "validate.py:132-157",
+        "FEATURES.md:241-303",
+        "validate.py:25-49"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 2.1936,
+      "timings_ms": {
+        "abstain": 0.014,
+        "embed_query": 12.0949,
+        "fuse": 0.1013,
+        "keyword": 1.4495,
+        "rerank": 7543.9948,
+        "select": 0.0844,
+        "vector": 0.1184
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        5
+      ],
+      "id": "clicr-008",
+      "ranked": [
+        "QUICKSTART_NEW.md:121-240",
+        "README.md:122-240",
+        "ingest.py:204-237",
+        "README.md:1-120",
+        "ingest.py:149-201",
+        "ingest.py:422-493",
+        "ingest.py:496-576",
+        "QUICKSTART.md:121-198",
+        "ingest.py:240-281",
+        "history.py:168-218"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.2,
+      "signal": -6.4991,
+      "timings_ms": {
+        "abstain": 0.0158,
+        "embed_query": 11.5103,
+        "fuse": 0.1108,
+        "keyword": 2.0774,
+        "rerank": 7655.9925,
+        "select": 0.1149,
+        "vector": 0.0983
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1,
+        null,
+        null
+      ],
+      "id": "clicr-009",
+      "ranked": [
+        "ingest.py:399-419",
+        "ingest.py:422-493",
+        "FEATURES.md:1-120",
+        "README.md:122-240",
+        "ingest.py:496-576",
+        "ingest.py:579-611",
+        "QUICKSTART_NEW.md:361-435",
+        "QUICKSTART_NEW.md:121-240",
+        "FEATURES.md:241-303",
+        "ingest.py:614-649"
+      ],
+      "recall@10": 0.3333,
+      "recall@5": 0.3333,
+      "recall@final": 0.3333,
+      "rr": 1.0,
+      "signal": 1.4892,
+      "timings_ms": {
+        "abstain": 0.0172,
+        "embed_query": 10.7926,
+        "fuse": 0.0964,
+        "keyword": 1.6836,
+        "rerank": 6450.7683,
+        "select": 0.0951,
+        "vector": 0.1095
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2
+      ],
+      "id": "clicr-010",
+      "ranked": [
+        "README.md:1-120",
+        "chat.py:145-178",
+        "main.py:248-329",
+        "chat.py:29-73",
+        "README.md:122-240",
+        "chat.py:229-324",
+        "QUICKSTART.md:121-198",
+        "FEATURES.md:1-120",
+        "QUICKSTART_NEW.md:121-240",
+        "FEATURES.md:121-239"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.5,
+      "signal": -5.5161,
+      "timings_ms": {
+        "abstain": 0.0174,
+        "embed_query": 9.4106,
+        "fuse": 0.1056,
+        "keyword": 1.2688,
+        "rerank": 6882.3234,
+        "select": 0.1126,
+        "vector": 0.0978
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2
+      ],
+      "id": "clicr-011",
+      "ranked": [
+        "chat.py:97-118",
+        "ingest.py:284-335",
+        "ingest.py:240-281",
+        "QUICKSTART.md:121-198",
+        "QUICKSTART_NEW.md:121-240",
+        "ingest.py:422-493",
+        "ingest.py:149-201",
+        "config.py:1-73",
+        "FEATURES.md:241-303",
+        "ingest.py:1-64"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.5,
+      "signal": 0.5603,
+      "timings_ms": {
+        "abstain": 0.0129,
+        "embed_query": 12.5963,
+        "fuse": 0.1026,
+        "keyword": 1.7005,
+        "rerank": 6456.3179,
+        "select": 0.0851,
+        "vector": 0.1297
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1,
+        null
+      ],
+      "id": "clicr-012",
+      "ranked": [
+        "ingest.py:86-120",
+        "QUICKSTART_NEW.md:121-240",
+        "ingest.py:422-493",
+        "ingest.py:1-64",
+        "chat.py:229-324",
+        "README.md:122-240",
+        "SETUP.md:1-95",
+        "FEATURES.md:241-303",
+        "ingest.py:496-576",
+        "QUICKSTART.md:1-120"
+      ],
+      "recall@10": 0.5,
+      "recall@5": 0.5,
+      "recall@final": 0.5,
+      "rr": 1.0,
+      "signal": 1.3803,
+      "timings_ms": {
+        "abstain": 0.0194,
+        "embed_query": 11.4333,
+        "fuse": 0.1099,
+        "keyword": 1.5292,
+        "rerank": 6985.2616,
+        "select": 0.0986,
+        "vector": 0.0991
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "clicr-013",
+      "ranked": [
+        "chat.py:180-227",
+        "history.py:220-244",
+        "FEATURES.md:121-239",
+        "SETUP.md:1-95",
+        "QUICKSTART.md:1-120",
+        "README.md:1-120",
+        "QUICKSTART_NEW.md:242-360",
+        "QUICKSTART_NEW.md:121-240",
+        "README.md:122-240",
+        "main.py:332-381"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 0.2515,
+      "timings_ms": {
+        "abstain": 0.0156,
+        "embed_query": 12.7748,
+        "fuse": 0.0954,
+        "keyword": 1.3964,
+        "rerank": 7224.4701,
+        "select": 0.2302,
+        "vector": 0.0982
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        5,
+        null
+      ],
+      "id": "clicr-014",
+      "ranked": [
+        "README.md:122-240",
+        "QUICKSTART_NEW.md:361-435",
+        "main.py:102-130",
+        "FEATURES.md:241-303",
+        "ingest.py:579-611",
+        "FEATURES.md:1-120",
+        "QUICKSTART_NEW.md:121-240",
+        "README.md:1-120",
+        "FEATURES.md:121-239",
+        "main.py:66-77"
+      ],
+      "recall@10": 0.5,
+      "recall@5": 0.5,
+      "recall@final": 0.5,
+      "rr": 0.2,
+      "signal": 4.1763,
+      "timings_ms": {
+        "abstain": 0.0133,
+        "embed_query": 11.3053,
+        "fuse": 0.099,
+        "keyword": 1.6819,
+        "rerank": 6203.0622,
+        "select": 0.0857,
+        "vector": 0.1311
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2,
+        null,
+        5
+      ],
+      "id": "clicr-015",
+      "ranked": [
+        "README.md:122-240",
+        "chat.py:229-324",
+        "chat.py:145-178",
+        "FEATURES.md:1-120",
+        "history.py:308-329",
+        "chat.py:29-73",
+        "QUICKSTART_NEW.md:361-435",
+        "QUICKSTART_NEW.md:1-119",
+        "chat.py:327-346",
+        "main.py:248-329"
+      ],
+      "recall@10": 0.6667,
+      "recall@5": 0.6667,
+      "recall@final": 0.6667,
+      "rr": 0.5,
+      "signal": 1.6514,
+      "timings_ms": {
+        "abstain": 0.0138,
+        "embed_query": 12.8092,
+        "fuse": 0.1005,
+        "keyword": 2.4657,
+        "rerank": 7053.8326,
+        "select": 0.1017,
+        "vector": 0.0987
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        8,
+        3,
+        7
+      ],
+      "id": "clicr-016",
+      "ranked": [
+        "README.md:122-240",
+        "FEATURES.md:1-120",
+        "ingest.py:579-611",
+        "QUICKSTART_NEW.md:361-435",
+        "FEATURES.md:241-303",
+        "ingest.py:399-419",
+        "ingest.py:422-493",
+        "main.py:102-130",
+        "QUICKSTART_NEW.md:121-240",
+        "FEATURES.md:121-239"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 0.3333,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 1.1021,
+      "timings_ms": {
+        "abstain": 0.0123,
+        "embed_query": 16.4484,
+        "fuse": 0.1176,
+        "keyword": 2.6683,
+        "rerank": 7127.1053,
+        "select": 0.0965,
+        "vector": 0.1216
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        6,
+        5
+      ],
+      "id": "clicr-017",
+      "ranked": [
+        "chat.py:229-324",
+        "FEATURES.md:1-120",
+        "FEATURES.md:121-239",
+        "README.md:122-240",
+        "history.py:168-218",
+        "main.py:133-182",
+        "QUICKSTART_NEW.md:361-435",
+        "README.md:1-120",
+        "FEATURES.md:241-303",
+        "main.py:66-77"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 0.5,
+      "recall@final": 1.0,
+      "rr": 0.2,
+      "signal": 4.7158,
+      "timings_ms": {
+        "abstain": 0.0134,
+        "embed_query": 11.8385,
+        "fuse": 0.1057,
+        "keyword": 1.654,
+        "rerank": 6066.3602,
+        "select": 0.0784,
+        "vector": 0.1245
+      }
+    },
+    {
+      "category": "unanswerable",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [],
+      "id": "clicr-018",
+      "ranked": [
+        "chat.py:97-118",
+        "QUICKSTART.md:121-198",
+        "ingest.py:284-335",
+        "ingest.py:240-281",
+        "README.md:1-120",
+        "QUICKSTART_NEW.md:121-240",
+        "ingest.py:1-64",
+        "chat.py:229-324",
+        "config.py:1-73",
+        "chat.py:120-143"
+      ],
+      "recall@10": 0.0,
+      "recall@5": 0.0,
+      "recall@final": 0.0,
+      "rr": 0.0,
+      "signal": -3.9753,
+      "timings_ms": {
+        "abstain": 0.0161,
+        "embed_query": 11.5404,
+        "fuse": 0.0929,
+        "keyword": 1.7072,
+        "rerank": 7207.7158,
+        "select": 0.1003,
+        "vector": 0.2509
+      }
+    },
+    {
+      "category": "unanswerable",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [],
+      "id": "clicr-019",
+      "ranked": [
+        "QUICKSTART.md:1-120",
+        "README.md:1-120",
+        "SETUP.md:1-95",
+        "QUICKSTART_NEW.md:121-240",
+        "README.md:122-240",
+        "ingest.py:422-493",
+        "README.md:242-289",
+        "FEATURES.md:121-239",
+        "main.py:248-329",
+        "ingest.py:240-281"
+      ],
+      "recall@10": 0.0,
+      "recall@5": 0.0,
+      "recall@final": 0.0,
+      "rr": 0.0,
+      "signal": -7.7406,
+      "timings_ms": {
+        "abstain": 0.0145,
+        "embed_query": 12.7756,
+        "fuse": 0.1036,
+        "keyword": 2.1503,
+        "rerank": 7153.113,
+        "select": 0.1106,
+        "vector": 0.1117
+      }
+    },
+    {
+      "category": "follow_up",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2
+      ],
+      "id": "clicr-020",
+      "ranked": [
+        "ingest.py:284-335",
+        "ingest.py:240-281",
+        "README.md:122-240",
+        "ingest.py:496-576",
+        "README.md:1-120",
+        "config.py:1-73",
+        "chat.py:229-324",
+        "chat.py:75-95",
+        "chat.py:97-118",
+        "QUICKSTART_NEW.md:121-240"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.5,
+      "signal": -1.4984,
+      "timings_ms": {
+        "abstain": 0.0145,
+        "embed_query": 9.3994,
+        "fuse": 0.0984,
+        "keyword": 1.3187,
+        "rerank": 7014.3976,
+        "select": 0.092,
+        "vector": 4.43
+      }
+    }
+  ],
+  "machine": {
+    "cpu": "Intel64 Family 6 Model 165 Stepping 2, GenuineIntel",
+    "gpu": "Quadro RTX 4000 with Max-Q Design",
+    "os": "Windows 11 (10.0.26300)"
+  },
+  "models": {
+    "chat": null,
+    "embedders": [
+      "fastembed:BAAI/bge-small-en-v1.5"
+    ],
+    "judge": null,
+    "reranker": "Xenova/ms-marco-MiniLM-L-12-v2"
+  },
+  "ref": "33d8717",
+  "rows": [
+    {
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "latency": {
+        "abstain": {
+          "mean": 0.0158,
+          "p95": 0.0198
+        },
+        "embed_query": {
+          "mean": 54.4232,
+          "p95": 68.5998
+        },
+        "fuse": {
+          "mean": 0.1075,
+          "p95": 0.1292
+        },
+        "keyword": {
+          "mean": 1.9889,
+          "p95": 3.7056
+        },
+        "rerank": {
+          "mean": 7225.5178,
+          "p95": 8500.3672
+        },
+        "select": {
+          "mean": 0.1142,
+          "p95": 0.2346
+        },
+        "total": {
+          "mean": 7282.9556,
+          "p95": 8572.3652
+        },
+        "vector": {
+          "mean": 0.7882,
+          "p95": 4.625
+        }
+      },
+      "metrics": {
+        "by_category": {
+          "follow_up": {
+            "mrr": 0.5,
+            "n": 1,
+            "recall@10": 1.0,
+            "recall@5": 1.0,
+            "recall@final": 1.0
+          },
+          "how": {
+            "mrr": 0.6286,
+            "n": 7,
+            "recall@10": 0.7619,
+            "recall@5": 0.7619,
+            "recall@final": 0.7619
+          },
+          "lookup": {
+            "mrr": 0.8143,
+            "n": 7,
+            "recall@10": 1.0,
+            "recall@5": 1.0,
+            "recall@final": 1.0
+          },
+          "multi_hop": {
+            "mrr": 0.3444,
+            "n": 3,
+            "recall@10": 0.8889,
+            "recall@5": 0.5,
+            "recall@final": 0.8889
+          }
+        },
+        "overall": {
+          "mrr": 0.6463,
+          "n": 18,
+          "recall@10": 0.8889,
+          "recall@5": 0.8241,
+          "recall@final": 0.8889
+        }
+      },
+      "settings": {
+        "chunker": "syntax",
+        "graph": false,
+        "header": true,
+        "hyde": false,
+        "mode": "hybrid",
+        "name": "+rerank",
+        "rerank": "cross",
+        "rewrite": false
+      }
+    }
+  ],
+  "settings": {
+    "k_candidates": 20,
+    "top_k": 10
+  },
+  "suite": "clicr"
+}

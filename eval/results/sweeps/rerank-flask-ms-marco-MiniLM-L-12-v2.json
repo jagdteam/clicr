@@ -1,0 +1,2286 @@
+{
+  "abstain": {
+    "config": "+rerank",
+    "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+    "f1": 0.8,
+    "metrics_at_threshold": {
+      "by_category": {
+        "follow_up": {
+          "mrr": 0.4896,
+          "n": 8,
+          "recall@10": 0.625,
+          "recall@5": 0.5625,
+          "recall@final": 0.625
+        },
+        "how": {
+          "mrr": 0.744,
+          "n": 18,
+          "recall@10": 0.9815,
+          "recall@5": 0.8519,
+          "recall@final": 0.9815
+        },
+        "lookup": {
+          "mrr": 0.5546,
+          "n": 20,
+          "recall@10": 0.95,
+          "recall@5": 0.85,
+          "recall@final": 0.95
+        },
+        "multi_hop": {
+          "mrr": 0.6146,
+          "n": 8,
+          "recall@10": 0.5417,
+          "recall@5": 0.4583,
+          "recall@final": 0.5417
+        }
+      },
+      "overall": {
+        "mrr": 0.617,
+        "n": 54,
+        "recall@10": 0.8519,
+        "recall@5": 0.75,
+        "recall@final": 0.8519
+      }
+    },
+    "n_items": 60,
+    "n_unanswerable": 6,
+    "precision": 0.6667,
+    "recall": 1.0,
+    "signal": "cross-encoder score",
+    "threshold": 0.5457730889320374
+  },
+  "answers": null,
+  "best": {
+    "config": "+rerank",
+    "embedder": "fastembed:BAAI/bge-small-en-v1.5"
+  },
+  "clicr_version": "0.2.0.dev0",
+  "commit": "22d924701a6ae2e4cd01e9a15bbaf3946094af65",
+  "created": "2026-10-23T04:49:56+00:00",
+  "include": "src/flask",
+  "index_fingerprint": "fc69b92179e97d19943d19f783a192170a085422",
+  "items": [
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        7
+      ],
+      "id": "flask-001",
+      "ranked": [
+        "src/flask/wrappers.py:59-86",
+        "src/flask/sessions.py:284-385",
+        "src/flask/sessions.py:175-185",
+        "src/flask/sessions.py:187-193",
+        "src/flask/wrappers.py:88-90",
+        "src/flask/sessions.py:215-221",
+        "src/flask/app.py:201-224",
+        "src/flask/sessions.py:208-213",
+        "src/flask/sessions.py:100-148",
+        "src/flask/sessions.py:202-206"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 0.0,
+      "recall@final": 1.0,
+      "rr": 0.1429,
+      "signal": 1.4106,
+      "timings_ms": {
+        "abstain": 0.0212,
+        "embed_query": 679.7967,
+        "fuse": 0.1926,
+        "keyword": 7.3552,
+        "rerank": 20778.6068,
+        "select": 0.1597,
+        "vector": 36.8879
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-002",
+      "ranked": [
+        "src/flask/app.py:1003-1121",
+        "src/flask/sansio/scaffold.py:367-433",
+        "src/flask/helpers.py:195-246",
+        "src/flask/sansio/scaffold.py:435-457",
+        "src/flask/sansio/scaffold.py:335-365",
+        "src/flask/sansio/app.py:911-930",
+        "src/flask/sansio/scaffold.py:558-581",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/sansio/app.py:604-661",
+        "src/flask/sansio/scaffold.py:701-706"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 2.8351,
+      "timings_ms": {
+        "abstain": 0.0244,
+        "embed_query": 19.116,
+        "fuse": 0.2636,
+        "keyword": 3.8929,
+        "rerank": 8881.6129,
+        "select": 0.1443,
+        "vector": 0.2175
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-003",
+      "ranked": [
+        "src/flask/app.py:1129-1248",
+        "src/flask/helpers.py:146-192",
+        "src/flask/app.py:1249-1269",
+        "src/flask/app.py:879-902",
+        "src/flask/json/__init__.py:138-170",
+        "src/flask/app.py:922-951",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/wrappers.py:222-257",
+        "src/flask/app.py:1298-1324",
+        "src/flask/ctx.py:117-149"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 5.3844,
+      "timings_ms": {
+        "abstain": 0.0219,
+        "embed_query": 22.1409,
+        "fuse": 0.1479,
+        "keyword": 3.1461,
+        "rerank": 9035.8831,
+        "select": 0.1477,
+        "vector": 0.2068
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-004",
+      "ranked": [
+        "src/flask/helpers.py:28-33",
+        "src/flask/sansio/app.py:549-560",
+        "src/flask/app.py:546-665",
+        "src/flask/cli.py:774-785",
+        "src/flask/cli.py:468-482",
+        "src/flask/cli.py:1118-1127",
+        "src/flask/cli.py:531-561",
+        "src/flask/logging.py:58-79",
+        "src/flask/sansio/app.py:442-467",
+        "src/flask/app.py:330-361"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 5.7941,
+      "timings_ms": {
+        "abstain": 0.0225,
+        "embed_query": 29.3474,
+        "fuse": 0.1817,
+        "keyword": 3.8375,
+        "rerank": 7802.3538,
+        "select": 0.1546,
+        "vector": 0.2142
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-005",
+      "ranked": [
+        "src/flask/helpers.py:318-349",
+        "src/flask/helpers.py:352-391",
+        "src/flask/views.py:138-191",
+        "src/flask/app.py:330-361",
+        "src/flask/sansio/blueprints.py:34-116",
+        "src/flask/app.py:1423-1477",
+        "src/flask/sansio/scaffold.py:52-73",
+        "src/flask/__init__.py:1-61",
+        "src/flask/app.py:1360-1384",
+        "src/flask/config.py:256-302"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 0.5904,
+      "timings_ms": {
+        "abstain": 0.0187,
+        "embed_query": 19.3429,
+        "fuse": 0.1546,
+        "keyword": 1.3699,
+        "rerank": 9047.578,
+        "select": 0.1319,
+        "vector": 0.2369
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3
+      ],
+      "id": "flask-006",
+      "ranked": [
+        "src/flask/app.py:811-862",
+        "src/flask/app.py:744-777",
+        "src/flask/sansio/app.py:823-846",
+        "src/flask/sansio/app.py:848-881",
+        "src/flask/app.py:879-902",
+        "src/flask/cli.py:41-91",
+        "src/flask/app.py:779-809",
+        "src/flask/sansio/scaffold.py:597-639",
+        "src/flask/app.py:478-504",
+        "src/flask/sansio/app.py:932-964"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 5.6233,
+      "timings_ms": {
+        "abstain": 0.0133,
+        "embed_query": 28.4308,
+        "fuse": 0.7781,
+        "keyword": 5.6397,
+        "rerank": 10239.1583,
+        "select": 0.0924,
+        "vector": 0.3218
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-007",
+      "ranked": [
+        "src/flask/config.py:256-302",
+        "src/flask/config.py:126-185",
+        "src/flask/json/__init__.py:108-135",
+        "src/flask/config.py:102-124",
+        "src/flask/config.py:50-92",
+        "src/flask/json/__init__.py:77-105",
+        "src/flask/__init__.py:1-61",
+        "src/flask/json/provider.py:19-105",
+        "src/flask/config.py:187-216",
+        "src/flask/config.py:218-254"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 5.6625,
+      "timings_ms": {
+        "abstain": 0.024,
+        "embed_query": 26.5784,
+        "fuse": 0.1742,
+        "keyword": 2.7618,
+        "rerank": 9363.2095,
+        "select": 0.149,
+        "vector": 1.9715
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2
+      ],
+      "id": "flask-008",
+      "ranked": [
+        "src/flask/json/provider.py:19-105",
+        "src/flask/json/__init__.py:138-170",
+        "src/flask/app.py:1129-1248",
+        "src/flask/json/__init__.py:77-105",
+        "src/flask/json/__init__.py:47-74",
+        "src/flask/json/__init__.py:108-135",
+        "src/flask/json/__init__.py:13-44",
+        "src/flask/json/provider.py:124-215",
+        "src/flask/json/tag.py:173-188",
+        "src/flask/app.py:1423-1477"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.5,
+      "signal": 4.7144,
+      "timings_ms": {
+        "abstain": 0.0191,
+        "embed_query": 15.9416,
+        "fuse": 0.1531,
+        "keyword": 1.8622,
+        "rerank": 8926.7379,
+        "select": 0.1269,
+        "vector": 0.1964
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        4
+      ],
+      "id": "flask-009",
+      "ranked": [
+        "src/flask/sansio/blueprints.py:412-441",
+        "src/flask/sansio/blueprints.py:119-172",
+        "src/flask/sansio/app.py:569-595",
+        "src/flask/sansio/blueprints.py:34-116",
+        "src/flask/sansio/blueprints.py:255-271",
+        "src/flask/sansio/blueprints.py:273-377",
+        "src/flask/wrappers.py:161-178",
+        "src/flask/wrappers.py:180-195",
+        "src/flask/blueprints.py:18-128",
+        "src/flask/app.py:1003-1121"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.25,
+      "signal": 4.3701,
+      "timings_ms": {
+        "abstain": 0.0223,
+        "embed_query": 30.1738,
+        "fuse": 0.1517,
+        "keyword": 4.3126,
+        "rerank": 8785.756,
+        "select": 0.1389,
+        "vector": 0.2604
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        null
+      ],
+      "id": "flask-010",
+      "ranked": [
+        "src/flask/templating.py:24-37",
+        "src/flask/sessions.py:249-261",
+        "src/flask/ctx.py:367-375",
+        "src/flask/views.py:138-191",
+        "src/flask/sessions.py:100-148",
+        "src/flask/sessions.py:263-270",
+        "src/flask/app.py:1407-1421",
+        "src/flask/testing.py:135-183",
+        "src/flask/ctx.py:337-355",
+        "src/flask/app.py:1423-1477"
+      ],
+      "recall@10": 0.0,
+      "recall@5": 0.0,
+      "recall@final": 0.0,
+      "rr": 0.0,
+      "signal": 3.8497,
+      "timings_ms": {
+        "abstain": 0.0178,
+        "embed_query": 89.1238,
+        "fuse": 0.1537,
+        "keyword": 2.4533,
+        "rerank": 9002.7117,
+        "select": 0.1217,
+        "vector": 0.2281
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3
+      ],
+      "id": "flask-011",
+      "ranked": [
+        "src/flask/cli.py:405-437",
+        "src/flask/testing.py:265-298",
+        "src/flask/cli.py:1007-1053",
+        "src/flask/sessions.py:249-261",
+        "src/flask/app.py:727-742",
+        "src/flask/app.py:226-279",
+        "src/flask/helpers.py:36-48",
+        "src/flask/cli.py:563-598",
+        "src/flask/app.py:534-544",
+        "src/flask/app.py:666-667"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 2.5238,
+      "timings_ms": {
+        "abstain": 0.0182,
+        "embed_query": 48.2181,
+        "fuse": 0.1792,
+        "keyword": 2.1533,
+        "rerank": 9631.1853,
+        "select": 0.1272,
+        "vector": 0.2307
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-012",
+      "ranked": [
+        "src/flask/cli.py:41-91",
+        "src/flask/sansio/app.py:59-178",
+        "src/flask/app.py:81-200",
+        "src/flask/cli.py:449-465",
+        "src/flask/cli.py:293-372",
+        "src/flask/cli.py:1007-1053",
+        "src/flask/cli.py:120-197",
+        "src/flask/sansio/app.py:425-440",
+        "src/flask/cli.py:241-264",
+        "src/flask/cli.py:1118-1127"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 3.8105,
+      "timings_ms": {
+        "abstain": 0.023,
+        "embed_query": 49.3998,
+        "fuse": 0.1743,
+        "keyword": 4.3809,
+        "rerank": 9355.5482,
+        "select": 1.1692,
+        "vector": 0.222
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-013",
+      "ranked": [
+        "src/flask/signals.py:1-17",
+        "src/flask/app.py:1129-1248",
+        "src/flask/sansio/app.py:59-178",
+        "src/flask/app.py:81-200",
+        "src/flask/__init__.py:1-61",
+        "src/flask/app.py:1360-1384",
+        "src/flask/testing.py:265-298",
+        "src/flask/app.py:330-361",
+        "src/flask/cli.py:563-598",
+        "src/flask/sansio/scaffold.py:52-73"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 1.6745,
+      "timings_ms": {
+        "abstain": 0.0179,
+        "embed_query": 58.6529,
+        "fuse": 0.4484,
+        "keyword": 4.4443,
+        "rerank": 10381.5609,
+        "select": 0.125,
+        "vector": 0.1869
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3
+      ],
+      "id": "flask-014",
+      "ranked": [
+        "src/flask/app.py:425-476",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/ctx.py:357-365",
+        "src/flask/wrappers.py:146-159",
+        "src/flask/ctx.py:287-307",
+        "src/flask/app.py:879-902",
+        "src/flask/ctx.py:377-404",
+        "src/flask/sansio/scaffold.py:367-433",
+        "src/flask/app.py:1423-1477",
+        "src/flask/app.py:1407-1421"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 2.5763,
+      "timings_ms": {
+        "abstain": 0.0203,
+        "embed_query": 91.3628,
+        "fuse": 0.161,
+        "keyword": 4.4879,
+        "rerank": 9687.5247,
+        "select": 0.1396,
+        "vector": 0.2252
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        6
+      ],
+      "id": "flask-015",
+      "ranked": [
+        "src/flask/templating.py:40-50",
+        "src/flask/sansio/scaffold.py:271-282",
+        "src/flask/sansio/blueprints.py:119-172",
+        "src/flask/sansio/blueprints.py:534-551",
+        "src/flask/sansio/blueprints.py:460-475",
+        "src/flask/templating.py:53-124",
+        "src/flask/sansio/blueprints.py:496-513",
+        "src/flask/sansio/app.py:469-477",
+        "src/flask/sansio/blueprints.py:34-116",
+        "src/flask/sansio/app.py:523-534"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 0.0,
+      "recall@final": 1.0,
+      "rr": 0.1667,
+      "signal": 5.6231,
+      "timings_ms": {
+        "abstain": 0.0295,
+        "embed_query": 191.0329,
+        "fuse": 0.2397,
+        "keyword": 3.7689,
+        "rerank": 9351.7708,
+        "select": 0.8668,
+        "vector": 0.2381
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2
+      ],
+      "id": "flask-016",
+      "ranked": [
+        "src/flask/sansio/app.py:498-508",
+        "src/flask/helpers.py:273-293",
+        "src/flask/views.py:138-191",
+        "src/flask/sansio/app.py:282-401",
+        "src/flask/__init__.py:1-61",
+        "src/flask/app.py:1423-1477",
+        "src/flask/app.py:330-361",
+        "src/flask/sansio/scaffold.py:52-73",
+        "src/flask/helpers.py:1-25",
+        "src/flask/helpers.py:352-391"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.5,
+      "signal": 2.0484,
+      "timings_ms": {
+        "abstain": 0.0189,
+        "embed_query": 53.2688,
+        "fuse": 4.1761,
+        "keyword": 1.2876,
+        "rerank": 8439.2516,
+        "select": 0.1219,
+        "vector": 0.2212
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2
+      ],
+      "id": "flask-017",
+      "ranked": [
+        "src/flask/app.py:779-809",
+        "src/flask/sansio/app.py:848-881",
+        "src/flask/app.py:811-862",
+        "src/flask/app.py:744-777",
+        "src/flask/sansio/scaffold.py:597-639",
+        "src/flask/app.py:922-951",
+        "src/flask/sansio/app.py:883-891",
+        "src/flask/app.py:904-920",
+        "src/flask/sansio/blueprints.py:595-610",
+        "src/flask/sansio/app.py:932-964"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.5,
+      "signal": 4.1167,
+      "timings_ms": {
+        "abstain": 0.0217,
+        "embed_query": 29.7418,
+        "fuse": 0.1446,
+        "keyword": 4.4521,
+        "rerank": 8721.3107,
+        "select": 0.1425,
+        "vector": 0.1989
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2
+      ],
+      "id": "flask-018",
+      "ranked": [
+        "src/flask/sessions.py:263-270",
+        "src/flask/sessions.py:233-247",
+        "src/flask/sessions.py:100-148",
+        "src/flask/sessions.py:249-261",
+        "src/flask/sessions.py:57-80",
+        "src/flask/sessions.py:284-385",
+        "src/flask/ctx.py:287-307",
+        "src/flask/sessions.py:187-193",
+        "src/flask/sessions.py:195-200",
+        "src/flask/sessions.py:175-185"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.5,
+      "signal": 1.2333,
+      "timings_ms": {
+        "abstain": 0.0195,
+        "embed_query": 36.9697,
+        "fuse": 0.1437,
+        "keyword": 4.0353,
+        "rerank": 8202.2258,
+        "select": 0.1257,
+        "vector": 0.2074
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3
+      ],
+      "id": "flask-019",
+      "ranked": [
+        "src/flask/json/provider.py:124-215",
+        "src/flask/json/tag.py:1-57",
+        "src/flask/json/provider.py:108-121",
+        "src/flask/json/provider.py:19-105",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/json/tag.py:219-327",
+        "src/flask/json/provider.py:1-16",
+        "src/flask/testing.py:27-94",
+        "src/flask/config.py:126-185",
+        "src/flask/json/__init__.py:13-44"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 0.7132,
+      "timings_ms": {
+        "abstain": 0.0189,
+        "embed_query": 17.6331,
+        "fuse": 0.1693,
+        "keyword": 3.2098,
+        "rerank": 9216.0533,
+        "select": 0.1097,
+        "vector": 0.2134
+      }
+    },
+    {
+      "category": "lookup",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        5
+      ],
+      "id": "flask-020",
+      "ranked": [
+        "src/flask/wrappers.py:161-178",
+        "src/flask/helpers.py:195-246",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/sansio/scaffold.py:367-433",
+        "src/flask/wrappers.py:146-159",
+        "src/flask/sansio/app.py:179-280",
+        "src/flask/app.py:1003-1121",
+        "src/flask/app.py:1271-1296",
+        "src/flask/ctx.py:287-307",
+        "src/flask/sansio/scaffold.py:435-457"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.2,
+      "signal": 2.4165,
+      "timings_ms": {
+        "abstain": 0.0198,
+        "embed_query": 21.0417,
+        "fuse": 0.145,
+        "keyword": 2.8806,
+        "rerank": 9081.8163,
+        "select": 0.1542,
+        "vector": 0.2041
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        4,
+        null,
+        9
+      ],
+      "id": "flask-021",
+      "ranked": [
+        "src/flask/app.py:1129-1248",
+        "src/flask/app.py:1249-1269",
+        "src/flask/app.py:1298-1324",
+        "src/flask/app.py:1479-1527",
+        "src/flask/helpers.py:146-192",
+        "src/flask/app.py:966-978",
+        "src/flask/app.py:1529-1536",
+        "src/flask/ctx.py:287-307",
+        "src/flask/app.py:879-902",
+        "src/flask/app.py:922-951"
+      ],
+      "recall@10": 0.6667,
+      "recall@5": 0.3333,
+      "recall@final": 0.6667,
+      "rr": 0.25,
+      "signal": 3.8837,
+      "timings_ms": {
+        "abstain": 0.0191,
+        "embed_query": 21.0632,
+        "fuse": 0.1459,
+        "keyword": 3.3183,
+        "rerank": 9477.4794,
+        "select": 0.1492,
+        "vector": 0.247
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3
+      ],
+      "id": "flask-022",
+      "ranked": [
+        "src/flask/sansio/scaffold.py:486-505",
+        "src/flask/ctx.py:117-149",
+        "src/flask/app.py:1298-1324",
+        "src/flask/sansio/scaffold.py:459-484",
+        "src/flask/ctx.py:309-335",
+        "src/flask/app.py:1326-1358",
+        "src/flask/sansio/scaffold.py:507-539",
+        "src/flask/sansio/blueprints.py:563-571",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/app.py:811-862"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 5.8848,
+      "timings_ms": {
+        "abstain": 0.022,
+        "embed_query": 30.0371,
+        "fuse": 0.1498,
+        "keyword": 3.1082,
+        "rerank": 8323.6335,
+        "select": 0.1407,
+        "vector": 0.2105
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3
+      ],
+      "id": "flask-023",
+      "ranked": [
+        "src/flask/sessions.py:233-247",
+        "src/flask/sessions.py:57-80",
+        "src/flask/sessions.py:284-385",
+        "src/flask/sessions.py:175-185",
+        "src/flask/testing.py:135-183",
+        "src/flask/sessions.py:263-270",
+        "src/flask/sessions.py:187-193",
+        "src/flask/sessions.py:195-200",
+        "src/flask/sessions.py:208-213",
+        "src/flask/sessions.py:215-221"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 3.9613,
+      "timings_ms": {
+        "abstain": 0.0212,
+        "embed_query": 15.0876,
+        "fuse": 0.1418,
+        "keyword": 2.7856,
+        "rerank": 6562.4283,
+        "select": 0.1357,
+        "vector": 0.229
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-024",
+      "ranked": [
+        "src/flask/sessions.py:284-385",
+        "src/flask/sessions.py:57-80",
+        "src/flask/sessions.py:215-221",
+        "src/flask/sessions.py:233-247",
+        "src/flask/sessions.py:175-185",
+        "src/flask/sessions.py:100-148",
+        "src/flask/sessions.py:187-193",
+        "src/flask/sessions.py:195-200",
+        "src/flask/sessions.py:202-206",
+        "src/flask/sessions.py:208-213"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 0.5458,
+      "timings_ms": {
+        "abstain": 0.0213,
+        "embed_query": 18.6669,
+        "fuse": 0.1537,
+        "keyword": 3.3803,
+        "rerank": 8112.2714,
+        "select": 0.1439,
+        "vector": 0.2117
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-025",
+      "ranked": [
+        "src/flask/views.py:16-135",
+        "src/flask/sansio/scaffold.py:335-365",
+        "src/flask/sansio/blueprints.py:119-172",
+        "src/flask/sansio/scaffold.py:367-433",
+        "src/flask/sansio/scaffold.py:75-194",
+        "src/flask/views.py:138-191",
+        "src/flask/sansio/scaffold.py:435-457",
+        "src/flask/sansio/app.py:604-661",
+        "src/flask/helpers.py:146-192",
+        "src/flask/wrappers.py:18-57"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 3.9442,
+      "timings_ms": {
+        "abstain": 0.0203,
+        "embed_query": 43.2748,
+        "fuse": 0.1823,
+        "keyword": 5.6752,
+        "rerank": 10498.2908,
+        "select": 0.1369,
+        "vector": 0.2409
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-026",
+      "ranked": [
+        "src/flask/views.py:138-191",
+        "src/flask/sessions.py:100-148",
+        "src/flask/sansio/app.py:604-661",
+        "src/flask/views.py:16-135",
+        "src/flask/helpers.py:195-246",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/views.py:1-13",
+        "src/flask/app.py:779-809",
+        "src/flask/json/provider.py:124-215",
+        "src/flask/sansio/app.py:282-401"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 3.0899,
+      "timings_ms": {
+        "abstain": 0.0208,
+        "embed_query": 23.3059,
+        "fuse": 0.1522,
+        "keyword": 2.7268,
+        "rerank": 10643.8908,
+        "select": 0.1408,
+        "vector": 0.2772
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3,
+        6
+      ],
+      "id": "flask-027",
+      "ranked": [
+        "src/flask/sansio/scaffold.py:597-639",
+        "src/flask/app.py:811-862",
+        "src/flask/sansio/scaffold.py:641-654",
+        "src/flask/sansio/app.py:823-846",
+        "src/flask/app.py:744-777",
+        "src/flask/sansio/scaffold.py:656-698",
+        "src/flask/sansio/scaffold.py:75-194",
+        "src/flask/sansio/blueprints.py:595-610",
+        "src/flask/app.py:879-902",
+        "src/flask/app.py:922-951"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 0.5,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 3.6723,
+      "timings_ms": {
+        "abstain": 0.0223,
+        "embed_query": 105.7685,
+        "fuse": 0.1486,
+        "keyword": 3.6317,
+        "rerank": 10646.7567,
+        "select": 0.141,
+        "vector": 0.2167
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-028",
+      "ranked": [
+        "src/flask/app.py:546-665",
+        "src/flask/cli.py:890-1001",
+        "src/flask/app.py:226-279",
+        "src/flask/sessions.py:100-148",
+        "src/flask/app.py:425-476",
+        "src/flask/cli.py:1056-1115",
+        "src/flask/ctx.py:238-284",
+        "src/flask/app.py:1479-1527",
+        "src/flask/cli.py:665-684",
+        "src/flask/sansio/app.py:282-401"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 1.3056,
+      "timings_ms": {
+        "abstain": 0.0127,
+        "embed_query": 60.3958,
+        "fuse": 0.1643,
+        "keyword": 2.8891,
+        "rerank": 9964.4899,
+        "select": 0.0875,
+        "vector": 0.2257
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-029",
+      "ranked": [
+        "src/flask/app.py:811-862",
+        "src/flask/app.py:1479-1527",
+        "src/flask/sansio/app.py:549-560",
+        "src/flask/app.py:669-725",
+        "src/flask/app.py:744-777",
+        "src/flask/app.py:1326-1358",
+        "src/flask/app.py:779-809",
+        "src/flask/app.py:478-504",
+        "src/flask/wrappers.py:92-113",
+        "src/flask/app.py:864-877"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 6.2945,
+      "timings_ms": {
+        "abstain": 0.0177,
+        "embed_query": 14.3573,
+        "fuse": 0.1487,
+        "keyword": 2.4734,
+        "rerank": 9830.5631,
+        "select": 0.1258,
+        "vector": 0.1995
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        7
+      ],
+      "id": "flask-030",
+      "ranked": [
+        "src/flask/app.py:546-665",
+        "src/flask/sansio/app.py:549-560",
+        "src/flask/cli.py:531-561",
+        "src/flask/cli.py:293-372",
+        "src/flask/cli.py:774-785",
+        "src/flask/app.py:81-200",
+        "src/flask/cli.py:890-1001",
+        "src/flask/sansio/app.py:59-178",
+        "src/flask/cli.py:1007-1053",
+        "src/flask/app.py:666-667"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 0.0,
+      "recall@final": 1.0,
+      "rr": 0.1429,
+      "signal": 5.91,
+      "timings_ms": {
+        "abstain": 0.0238,
+        "embed_query": 46.7098,
+        "fuse": 0.1418,
+        "keyword": 4.2776,
+        "rerank": 9679.1912,
+        "select": 0.1895,
+        "vector": 0.234
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-031",
+      "ranked": [
+        "src/flask/config.py:126-185",
+        "src/flask/config.py:50-92",
+        "src/flask/config.py:102-124",
+        "src/flask/cli.py:706-771",
+        "src/flask/sansio/app.py:179-280",
+        "src/flask/config.py:218-254",
+        "src/flask/config.py:323-364",
+        "src/flask/cli.py:515-528",
+        "src/flask/config.py:256-302",
+        "src/flask/testing.py:27-94"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 4.284,
+      "timings_ms": {
+        "abstain": 0.0324,
+        "embed_query": 32.7661,
+        "fuse": 0.1535,
+        "keyword": 5.0342,
+        "rerank": 9538.7109,
+        "select": 0.2425,
+        "vector": 0.3736
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-032",
+      "ranked": [
+        "src/flask/cli.py:1056-1115",
+        "src/flask/app.py:1003-1121",
+        "src/flask/sansio/scaffold.py:367-433",
+        "src/flask/helpers.py:195-246",
+        "src/flask/sansio/app.py:932-964",
+        "src/flask/sansio/scaffold.py:335-365",
+        "src/flask/sansio/app.py:604-661",
+        "src/flask/app.py:425-476",
+        "src/flask/app.py:226-279",
+        "src/flask/sansio/blueprints.py:119-172"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 0.8892,
+      "timings_ms": {
+        "abstain": 0.0199,
+        "embed_query": 45.4249,
+        "fuse": 0.1538,
+        "keyword": 2.6048,
+        "rerank": 9215.0122,
+        "select": 0.139,
+        "vector": 0.2357
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2,
+        1
+      ],
+      "id": "flask-033",
+      "ranked": [
+        "src/flask/helpers.py:352-391",
+        "src/flask/helpers.py:318-349",
+        "src/flask/__init__.py:1-61",
+        "src/flask/app.py:385-423",
+        "src/flask/signals.py:1-17",
+        "src/flask/app.py:1360-1384",
+        "src/flask/app.py:1-71",
+        "src/flask/sessions.py:83-97",
+        "src/flask/testing.py:135-183",
+        "src/flask/ctx.py:406-441"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 3.6687,
+      "timings_ms": {
+        "abstain": 0.0227,
+        "embed_query": 24.628,
+        "fuse": 0.1436,
+        "keyword": 2.1335,
+        "rerank": 9953.8271,
+        "select": 0.1606,
+        "vector": 0.2135
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-034",
+      "ranked": [
+        "src/flask/helpers.py:63-143",
+        "src/flask/templating.py:166-186",
+        "src/flask/ctx.py:287-307",
+        "src/flask/ctx.py:155-193",
+        "src/flask/sessions.py:263-270",
+        "src/flask/app.py:1326-1358",
+        "src/flask/app.py:1129-1248",
+        "src/flask/app.py:1479-1527",
+        "src/flask/app.py:1423-1477",
+        "src/flask/ctx.py:406-441"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 4.5241,
+      "timings_ms": {
+        "abstain": 0.0228,
+        "embed_query": 98.7521,
+        "fuse": 0.1687,
+        "keyword": 4.0043,
+        "rerank": 9263.296,
+        "select": 0.1435,
+        "vector": 0.2443
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1,
+        2
+      ],
+      "id": "flask-035",
+      "ranked": [
+        "src/flask/app.py:966-978",
+        "src/flask/app.py:980-1001",
+        "src/flask/app.py:922-951",
+        "src/flask/app.py:1129-1248",
+        "src/flask/helpers.py:146-192",
+        "src/flask/app.py:546-665",
+        "src/flask/app.py:1249-1269",
+        "src/flask/app.py:904-920",
+        "src/flask/app.py:1326-1358",
+        "src/flask/app.py:879-902"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 6.6652,
+      "timings_ms": {
+        "abstain": 0.0214,
+        "embed_query": 20.3495,
+        "fuse": 0.1974,
+        "keyword": 71.3201,
+        "rerank": 9307.2925,
+        "select": 0.1413,
+        "vector": 0.233
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2
+      ],
+      "id": "flask-036",
+      "ranked": [
+        "src/flask/sansio/scaffold.py:541-556",
+        "src/flask/app.py:506-532",
+        "src/flask/sansio/blueprints.py:583-593",
+        "src/flask/templating.py:139-151",
+        "src/flask/templating.py:189-205",
+        "src/flask/templating.py:208-220",
+        "src/flask/templating.py:166-186",
+        "src/flask/templating.py:154-163",
+        "src/flask/templating.py:127-136",
+        "src/flask/templating.py:24-37"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.5,
+      "signal": 6.8744,
+      "timings_ms": {
+        "abstain": 0.022,
+        "embed_query": 13.8049,
+        "fuse": 0.165,
+        "keyword": 2.5209,
+        "rerank": 9673.3074,
+        "select": 0.1366,
+        "vector": 0.2083
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-037",
+      "ranked": [
+        "src/flask/testing.py:135-183",
+        "src/flask/sansio/scaffold.py:459-484",
+        "src/flask/ctx.py:287-307",
+        "src/flask/sessions.py:100-148",
+        "src/flask/app.py:669-725",
+        "src/flask/sessions.py:249-261",
+        "src/flask/sessions.py:263-270",
+        "src/flask/testing.py:109-123",
+        "src/flask/app.py:1423-1477",
+        "src/flask/app.py:1298-1324"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 2.7718,
+      "timings_ms": {
+        "abstain": 0.0233,
+        "embed_query": 56.1567,
+        "fuse": 0.1554,
+        "keyword": 2.8877,
+        "rerank": 10034.2417,
+        "select": 0.1731,
+        "vector": 0.2203
+      }
+    },
+    {
+      "category": "how",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        2,
+        8
+      ],
+      "id": "flask-038",
+      "ranked": [
+        "src/flask/sansio/app.py:442-467",
+        "src/flask/logging.py:58-79",
+        "src/flask/app.py:811-862",
+        "src/flask/app.py:864-877",
+        "src/flask/sessions.py:100-148",
+        "src/flask/app.py:744-777",
+        "src/flask/logging.py:50-55",
+        "src/flask/logging.py:31-47",
+        "src/flask/helpers.py:28-33",
+        "src/flask/app.py:879-902"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 0.5,
+      "recall@final": 1.0,
+      "rr": 0.5,
+      "signal": 1.6451,
+      "timings_ms": {
+        "abstain": 0.0219,
+        "embed_query": 50.2888,
+        "fuse": 0.1504,
+        "keyword": 3.1564,
+        "rerank": 8991.4516,
+        "select": 0.1528,
+        "vector": 0.5138
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1,
+        7,
+        null
+      ],
+      "id": "flask-039",
+      "ranked": [
+        "src/flask/sansio/scaffold.py:335-365",
+        "src/flask/sansio/scaffold.py:367-433",
+        "src/flask/app.py:1003-1121",
+        "src/flask/sansio/scaffold.py:435-457",
+        "src/flask/cli.py:1056-1115",
+        "src/flask/views.py:16-135",
+        "src/flask/sansio/app.py:604-661",
+        "src/flask/app.py:879-902",
+        "src/flask/app.py:425-476",
+        "src/flask/wrappers.py:18-57"
+      ],
+      "recall@10": 0.6667,
+      "recall@5": 0.3333,
+      "recall@final": 0.6667,
+      "rr": 1.0,
+      "signal": 2.2755,
+      "timings_ms": {
+        "abstain": 0.0171,
+        "embed_query": 55.1465,
+        "fuse": 0.1716,
+        "keyword": 5.9008,
+        "rerank": 8872.5711,
+        "select": 0.1219,
+        "vector": 0.2274
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3,
+        8,
+        4
+      ],
+      "id": "flask-040",
+      "ranked": [
+        "src/flask/sansio/blueprints.py:119-172",
+        "src/flask/app.py:1003-1121",
+        "src/flask/sansio/blueprints.py:412-441",
+        "src/flask/sansio/app.py:569-595",
+        "src/flask/helpers.py:195-246",
+        "src/flask/wrappers.py:161-178",
+        "src/flask/sansio/blueprints.py:273-377",
+        "src/flask/sansio/blueprints.py:34-116",
+        "src/flask/sansio/scaffold.py:367-433",
+        "src/flask/sansio/app.py:911-930"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 0.6667,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 4.3943,
+      "timings_ms": {
+        "abstain": 0.0205,
+        "embed_query": 83.4903,
+        "fuse": 0.1295,
+        "keyword": 3.0114,
+        "rerank": 8588.1428,
+        "select": 0.1697,
+        "vector": 0.1908
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1,
+        null
+      ],
+      "id": "flask-041",
+      "ranked": [
+        "src/flask/ctx.py:377-404",
+        "src/flask/sessions.py:249-261",
+        "src/flask/app.py:1407-1421",
+        "src/flask/ctx.py:238-284",
+        "src/flask/ctx.py:287-307",
+        "src/flask/app.py:1386-1405",
+        "src/flask/ctx.py:337-355",
+        "src/flask/ctx.py:155-193",
+        "src/flask/app.py:1423-1477",
+        "src/flask/sessions.py:263-270"
+      ],
+      "recall@10": 0.5,
+      "recall@5": 0.5,
+      "recall@final": 0.5,
+      "rr": 1.0,
+      "signal": 6.5288,
+      "timings_ms": {
+        "abstain": 0.0185,
+        "embed_query": 133.8913,
+        "fuse": 0.1322,
+        "keyword": 2.7783,
+        "rerank": 8540.5029,
+        "select": 0.1187,
+        "vector": 0.2047
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        4,
+        null
+      ],
+      "id": "flask-042",
+      "ranked": [
+        "src/flask/app.py:879-902",
+        "src/flask/app.py:811-862",
+        "src/flask/cli.py:41-91",
+        "src/flask/app.py:779-809",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/app.py:744-777",
+        "src/flask/app.py:864-877",
+        "src/flask/app.py:478-504",
+        "src/flask/app.py:922-951",
+        "src/flask/sansio/app.py:848-881"
+      ],
+      "recall@10": 0.5,
+      "recall@5": 0.5,
+      "recall@final": 0.5,
+      "rr": 0.25,
+      "signal": 4.653,
+      "timings_ms": {
+        "abstain": 0.021,
+        "embed_query": 21.7818,
+        "fuse": 0.1234,
+        "keyword": 3.199,
+        "rerank": 8983.6871,
+        "select": 0.1355,
+        "vector": 0.2217
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        null,
+        2,
+        1,
+        null
+      ],
+      "id": "flask-043",
+      "ranked": [
+        "src/flask/templating.py:24-37",
+        "src/flask/app.py:506-532",
+        "src/flask/sessions.py:100-148",
+        "src/flask/sessions.py:249-261",
+        "src/flask/__init__.py:1-61",
+        "src/flask/helpers.py:63-143",
+        "src/flask/sansio/scaffold.py:459-484",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/ctx.py:367-375",
+        "src/flask/sessions.py:263-270"
+      ],
+      "recall@10": 0.5,
+      "recall@5": 0.5,
+      "recall@final": 0.5,
+      "rr": 1.0,
+      "signal": 4.3252,
+      "timings_ms": {
+        "abstain": 0.0135,
+        "embed_query": 40.8341,
+        "fuse": 0.6598,
+        "keyword": 2.9363,
+        "rerank": 8208.3186,
+        "select": 0.0898,
+        "vector": 0.2059
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3,
+        1,
+        8
+      ],
+      "id": "flask-044",
+      "ranked": [
+        "src/flask/app.py:1003-1121",
+        "src/flask/sansio/scaffold.py:367-433",
+        "src/flask/helpers.py:195-246",
+        "src/flask/sansio/app.py:604-661",
+        "src/flask/wrappers.py:146-159",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/sansio/scaffold.py:335-365",
+        "src/flask/sansio/app.py:932-964",
+        "src/flask/sansio/scaffold.py:583-595",
+        "src/flask/sansio/app.py:911-930"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 0.6667,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": -0.4163,
+      "timings_ms": {
+        "abstain": 0.0193,
+        "embed_query": 18.0158,
+        "fuse": 0.0959,
+        "keyword": 3.9961,
+        "rerank": 7077.2327,
+        "select": 0.1306,
+        "vector": 0.1551
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        4,
+        1,
+        null
+      ],
+      "id": "flask-045",
+      "ranked": [
+        "src/flask/json/provider.py:124-215",
+        "src/flask/json/tag.py:219-327",
+        "src/flask/app.py:1129-1248",
+        "src/flask/json/__init__.py:138-170",
+        "src/flask/json/tag.py:1-57",
+        "src/flask/wrappers.py:222-257",
+        "src/flask/json/tag.py:60-90",
+        "src/flask/json/provider.py:1-16",
+        "src/flask/helpers.py:146-192",
+        "src/flask/json/tag.py:205-216"
+      ],
+      "recall@10": 0.6667,
+      "recall@5": 0.6667,
+      "recall@final": 0.6667,
+      "rr": 1.0,
+      "signal": 1.7942,
+      "timings_ms": {
+        "abstain": 0.0129,
+        "embed_query": 16.1928,
+        "fuse": 0.1474,
+        "keyword": 3.061,
+        "rerank": 7822.5526,
+        "select": 0.1128,
+        "vector": 0.215
+      }
+    },
+    {
+      "category": "multi_hop",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3,
+        null
+      ],
+      "id": "flask-046",
+      "ranked": [
+        "src/flask/cli.py:531-561",
+        "src/flask/cli.py:563-598",
+        "src/flask/app.py:546-665",
+        "src/flask/cli.py:293-372",
+        "src/flask/cli.py:665-684",
+        "src/flask/cli.py:468-482",
+        "src/flask/helpers.py:28-33",
+        "src/flask/cli.py:774-785",
+        "src/flask/sansio/app.py:549-560",
+        "src/flask/cli.py:686-696"
+      ],
+      "recall@10": 0.5,
+      "recall@5": 0.5,
+      "recall@final": 0.5,
+      "rr": 0.3333,
+      "signal": 4.97,
+      "timings_ms": {
+        "abstain": 0.0177,
+        "embed_query": 20.1957,
+        "fuse": 0.1838,
+        "keyword": 5.3768,
+        "rerank": 7442.6794,
+        "select": 0.1191,
+        "vector": 0.2944
+      }
+    },
+    {
+      "category": "unanswerable",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [],
+      "id": "flask-047",
+      "ranked": [
+        "src/flask/app.py:81-200",
+        "src/flask/sansio/app.py:59-178",
+        "src/flask/cli.py:531-561",
+        "src/flask/app.py:1423-1477",
+        "src/flask/testing.py:27-94",
+        "src/flask/sansio/app.py:179-280",
+        "src/flask/cli.py:293-372",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/json/provider.py:124-215",
+        "src/flask/app.py:330-361"
+      ],
+      "recall@10": 0.0,
+      "recall@5": 0.0,
+      "recall@final": 0.0,
+      "rr": 0.0,
+      "signal": 0.2509,
+      "timings_ms": {
+        "abstain": 0.026,
+        "embed_query": 17.6002,
+        "fuse": 0.178,
+        "keyword": 3.9647,
+        "rerank": 7812.1471,
+        "select": 0.2806,
+        "vector": 0.3615
+      }
+    },
+    {
+      "category": "unanswerable",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [],
+      "id": "flask-048",
+      "ranked": [
+        "src/flask/app.py:1003-1121",
+        "src/flask/app.py:425-476",
+        "src/flask/sansio/app.py:59-178",
+        "src/flask/app.py:81-200",
+        "src/flask/ctx.py:287-307",
+        "src/flask/app.py:1423-1477",
+        "src/flask/app.py:546-665",
+        "src/flask/testing.py:27-94",
+        "src/flask/helpers.py:407-526",
+        "src/flask/wrappers.py:18-57"
+      ],
+      "recall@10": 0.0,
+      "recall@5": 0.0,
+      "recall@final": 0.0,
+      "rr": 0.0,
+      "signal": -2.0438,
+      "timings_ms": {
+        "abstain": 0.0208,
+        "embed_query": 16.6164,
+        "fuse": 0.2038,
+        "keyword": 2.664,
+        "rerank": 8825.5313,
+        "select": 0.1492,
+        "vector": 0.2128
+      }
+    },
+    {
+      "category": "unanswerable",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [],
+      "id": "flask-049",
+      "ranked": [
+        "src/flask/sansio/app.py:179-280",
+        "src/flask/sessions.py:284-385",
+        "src/flask/app.py:779-809",
+        "src/flask/app.py:425-476",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/app.py:1423-1477",
+        "src/flask/app.py:669-725",
+        "src/flask/app.py:666-667",
+        "src/flask/testing.py:27-94",
+        "src/flask/app.py:904-920"
+      ],
+      "recall@10": 0.0,
+      "recall@5": 0.0,
+      "recall@final": 0.0,
+      "rr": 0.0,
+      "signal": -2.3551,
+      "timings_ms": {
+        "abstain": 0.0192,
+        "embed_query": 39.0721,
+        "fuse": 0.1625,
+        "keyword": 2.4973,
+        "rerank": 8382.9354,
+        "select": 0.1356,
+        "vector": 0.2285
+      }
+    },
+    {
+      "category": "unanswerable",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [],
+      "id": "flask-050",
+      "ranked": [
+        "src/flask/ctx.py:406-441",
+        "src/flask/app.py:811-862",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/app.py:81-200",
+        "src/flask/ctx.py:238-284",
+        "src/flask/app.py:1249-1269",
+        "src/flask/wrappers.py:119-140",
+        "src/flask/app.py:425-476",
+        "src/flask/app.py:669-725",
+        "src/flask/app.py:922-951"
+      ],
+      "recall@10": 0.0,
+      "recall@5": 0.0,
+      "recall@final": 0.0,
+      "rr": 0.0,
+      "signal": -2.2132,
+      "timings_ms": {
+        "abstain": 0.0123,
+        "embed_query": 12.5306,
+        "fuse": 0.142,
+        "keyword": 1.7145,
+        "rerank": 7970.029,
+        "select": 0.0906,
+        "vector": 0.1902
+      }
+    },
+    {
+      "category": "unanswerable",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [],
+      "id": "flask-051",
+      "ranked": [
+        "src/flask/wrappers.py:59-86",
+        "src/flask/wrappers.py:119-140",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/app.py:425-476",
+        "src/flask/testing.py:109-123",
+        "src/flask/sansio/app.py:179-280",
+        "src/flask/app.py:669-725",
+        "src/flask/wrappers.py:92-113",
+        "src/flask/helpers.py:352-391",
+        "src/flask/app.py:1423-1477"
+      ],
+      "recall@10": 0.0,
+      "recall@5": 0.0,
+      "recall@final": 0.0,
+      "rr": 0.0,
+      "signal": -9.636,
+      "timings_ms": {
+        "abstain": 0.0133,
+        "embed_query": 13.0132,
+        "fuse": 0.1476,
+        "keyword": 2.536,
+        "rerank": 8182.1785,
+        "select": 0.0888,
+        "vector": 0.1956
+      }
+    },
+    {
+      "category": "unanswerable",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [],
+      "id": "flask-052",
+      "ranked": [
+        "src/flask/app.py:1129-1248",
+        "src/flask/helpers.py:146-192",
+        "src/flask/sessions.py:100-148",
+        "src/flask/testing.py:204-247",
+        "src/flask/__init__.py:1-61",
+        "src/flask/json/provider.py:124-215",
+        "src/flask/helpers.py:407-526",
+        "src/flask/app.py:1479-1527",
+        "src/flask/templating.py:189-205",
+        "src/flask/testing.py:135-183"
+      ],
+      "recall@10": 0.0,
+      "recall@5": 0.0,
+      "recall@final": 0.0,
+      "rr": 0.0,
+      "signal": -5.7148,
+      "timings_ms": {
+        "abstain": 0.023,
+        "embed_query": 17.6038,
+        "fuse": 0.1565,
+        "keyword": 3.0066,
+        "rerank": 9307.7728,
+        "select": 0.1582,
+        "vector": 0.192
+      }
+    },
+    {
+      "category": "follow_up",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3,
+        10
+      ],
+      "id": "flask-053",
+      "ranked": [
+        "src/flask/debughelpers.py:50-78",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/app.py:879-902",
+        "src/flask/views.py:16-135",
+        "src/flask/app.py:478-504",
+        "src/flask/sansio/scaffold.py:507-539",
+        "src/flask/sansio/scaffold.py:367-433",
+        "src/flask/ctx.py:406-441",
+        "src/flask/app.py:201-224",
+        "src/flask/app.py:953-964"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 0.5,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 0.7311,
+      "timings_ms": {
+        "abstain": 0.0197,
+        "embed_query": 64.0328,
+        "fuse": 0.1923,
+        "keyword": 15.414,
+        "rerank": 8942.8248,
+        "select": 0.1592,
+        "vector": 10.8025
+      }
+    },
+    {
+      "category": "follow_up",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1,
+        5
+      ],
+      "id": "flask-054",
+      "ranked": [
+        "src/flask/sessions.py:233-247",
+        "src/flask/sessions.py:175-185",
+        "src/flask/sessions.py:202-206",
+        "src/flask/sessions.py:100-148",
+        "src/flask/sessions.py:284-385",
+        "src/flask/sessions.py:187-193",
+        "src/flask/sessions.py:208-213",
+        "src/flask/sansio/app.py:179-280",
+        "src/flask/sessions.py:57-80",
+        "src/flask/sessions.py:263-270"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 3.8731,
+      "timings_ms": {
+        "abstain": 0.0255,
+        "embed_query": 13.3715,
+        "fuse": 0.1196,
+        "keyword": 2.1497,
+        "rerank": 8275.3207,
+        "select": 0.5764,
+        "vector": 0.2219
+      }
+    },
+    {
+      "category": "follow_up",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        null,
+        1
+      ],
+      "id": "flask-055",
+      "ranked": [
+        "src/flask/app.py:811-862",
+        "src/flask/debughelpers.py:50-78",
+        "src/flask/app.py:779-809",
+        "src/flask/sansio/app.py:848-881",
+        "src/flask/app.py:744-777",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/sansio/app.py:932-964",
+        "src/flask/app.py:478-504",
+        "src/flask/app.py:879-902",
+        "src/flask/app.py:864-877"
+      ],
+      "recall@10": 0.5,
+      "recall@5": 0.5,
+      "recall@final": 0.5,
+      "rr": 1.0,
+      "signal": 5.1492,
+      "timings_ms": {
+        "abstain": 0.0218,
+        "embed_query": 18.9202,
+        "fuse": 0.2288,
+        "keyword": 3.2111,
+        "rerank": 9438.0994,
+        "select": 0.1382,
+        "vector": 0.2101
+      }
+    },
+    {
+      "category": "follow_up",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        null,
+        6
+      ],
+      "id": "flask-056",
+      "ranked": [
+        "src/flask/templating.py:208-220",
+        "src/flask/sessions.py:100-148",
+        "src/flask/__init__.py:1-61",
+        "src/flask/json/provider.py:124-215",
+        "src/flask/json/__init__.py:138-170",
+        "src/flask/templating.py:166-186",
+        "src/flask/testing.py:97-97",
+        "src/flask/cli.py:283-290",
+        "src/flask/debughelpers.py:124-178",
+        "src/flask/cli.py:531-561"
+      ],
+      "recall@10": 0.5,
+      "recall@5": 0.0,
+      "recall@final": 0.5,
+      "rr": 0.1667,
+      "signal": -6.9945,
+      "timings_ms": {
+        "abstain": 0.0199,
+        "embed_query": 48.2215,
+        "fuse": 0.1937,
+        "keyword": 4.8724,
+        "rerank": 10591.5194,
+        "select": 0.1315,
+        "vector": 0.2168
+      }
+    },
+    {
+      "category": "follow_up",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        3
+      ],
+      "id": "flask-057",
+      "ranked": [
+        "src/flask/cli.py:706-771",
+        "src/flask/cli.py:493-512",
+        "src/flask/config.py:187-216",
+        "src/flask/config.py:256-302",
+        "src/flask/cli.py:515-528",
+        "src/flask/helpers.py:533-574",
+        "src/flask/config.py:50-92",
+        "src/flask/helpers.py:407-526",
+        "src/flask/cli.py:531-561",
+        "src/flask/sansio/app.py:59-178"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 0.3333,
+      "signal": 3.5146,
+      "timings_ms": {
+        "abstain": 0.0249,
+        "embed_query": 34.3479,
+        "fuse": 0.161,
+        "keyword": 11.7755,
+        "rerank": 10396.1143,
+        "select": 0.1642,
+        "vector": 0.2507
+      }
+    },
+    {
+      "category": "follow_up",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1,
+        1
+      ],
+      "id": "flask-058",
+      "ranked": [
+        "src/flask/views.py:138-191",
+        "src/flask/sessions.py:100-148",
+        "src/flask/sansio/app.py:604-661",
+        "src/flask/json/provider.py:124-215",
+        "src/flask/helpers.py:352-391",
+        "src/flask/wrappers.py:18-57",
+        "src/flask/app.py:779-809",
+        "src/flask/views.py:1-13",
+        "src/flask/cli.py:1056-1115",
+        "src/flask/app.py:425-476"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": -3.8297,
+      "timings_ms": {
+        "abstain": 0.0215,
+        "embed_query": 25.2876,
+        "fuse": 0.1524,
+        "keyword": 2.494,
+        "rerank": 10956.0722,
+        "select": 0.1541,
+        "vector": 0.2721
+      }
+    },
+    {
+      "category": "follow_up",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        1
+      ],
+      "id": "flask-059",
+      "ranked": [
+        "src/flask/testing.py:204-247",
+        "src/flask/sansio/app.py:893-909",
+        "src/flask/helpers.py:249-270",
+        "src/flask/sessions.py:100-148",
+        "src/flask/app.py:478-504",
+        "src/flask/helpers.py:146-192",
+        "src/flask/debughelpers.py:50-78",
+        "src/flask/app.py:226-279",
+        "src/flask/helpers.py:195-246",
+        "src/flask/app.py:744-777"
+      ],
+      "recall@10": 1.0,
+      "recall@5": 1.0,
+      "recall@final": 1.0,
+      "rr": 1.0,
+      "signal": 0.6534,
+      "timings_ms": {
+        "abstain": 0.0172,
+        "embed_query": 16.2123,
+        "fuse": 0.1805,
+        "keyword": 2.0794,
+        "rerank": 9716.4107,
+        "select": 0.1453,
+        "vector": 0.2234
+      }
+    },
+    {
+      "category": "follow_up",
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "gold_ranks": [
+        null,
+        4
+      ],
+      "id": "flask-060",
+      "ranked": [
+        "src/flask/sansio/app.py:778-810",
+        "src/flask/sansio/scaffold.py:507-539",
+        "src/flask/app.py:1326-1358",
+        "src/flask/app.py:1360-1384",
+        "src/flask/sansio/scaffold.py:486-505",
+        "src/flask/sansio/app.py:883-891",
+        "src/flask/ctx.py:287-307",
+        "src/flask/app.py:1479-1527",
+        "src/flask/ctx.py:406-441",
+        "src/flask/sansio/blueprints.py:573-581"
+      ],
+      "recall@10": 0.5,
+      "recall@5": 0.5,
+      "recall@final": 0.5,
+      "rr": 0.25,
+      "signal": 6.4865,
+      "timings_ms": {
+        "abstain": 0.0173,
+        "embed_query": 21.9469,
+        "fuse": 0.1647,
+        "keyword": 2.2427,
+        "rerank": 10870.2262,
+        "select": 0.1271,
+        "vector": 0.2221
+      }
+    }
+  ],
+  "machine": {
+    "cpu": "Intel64 Family 6 Model 165 Stepping 2, GenuineIntel",
+    "gpu": "Quadro RTX 4000 with Max-Q Design",
+    "os": "Windows 11 (10.0.26300)"
+  },
+  "models": {
+    "chat": null,
+    "embedders": [
+      "fastembed:BAAI/bge-small-en-v1.5"
+    ],
+    "judge": null,
+    "reranker": "Xenova/ms-marco-MiniLM-L-12-v2"
+  },
+  "ref": "3.1.3",
+  "rows": [
+    {
+      "config": "+rerank",
+      "embedder": "fastembed:BAAI/bge-small-en-v1.5",
+      "latency": {
+        "abstain": {
+          "mean": 0.0204,
+          "p95": 0.0255
+        },
+        "embed_query": {
+          "mean": 50.4413,
+          "p95": 107.1746
+        },
+        "fuse": {
+          "mean": 0.2529,
+          "p95": 0.459
+        },
+        "keyword": {
+          "mean": 4.8424,
+          "p95": 7.5762
+        },
+        "rerank": {
+          "mean": 9314.181,
+          "p95": 10657.9302
+        },
+        "select": {
+          "mean": 0.1771,
+          "p95": 0.2954
+        },
+        "total": {
+          "mean": 9370.9641,
+          "p95": 10763.5986
+        },
+        "vector": {
+          "mean": 1.049,
+          "p95": 0.5867
+        }
+      },
+      "metrics": {
+        "by_category": {
+          "follow_up": {
+            "mrr": 0.6354,
+            "n": 8,
+            "recall@10": 0.8125,
+            "recall@5": 0.6875,
+            "recall@final": 0.8125
+          },
+          "how": {
+            "mrr": 0.744,
+            "n": 18,
+            "recall@10": 0.9815,
+            "recall@5": 0.8519,
+            "recall@final": 0.9815
+          },
+          "lookup": {
+            "mrr": 0.5546,
+            "n": 20,
+            "recall@10": 0.95,
+            "recall@5": 0.85,
+            "recall@final": 0.95
+          },
+          "multi_hop": {
+            "mrr": 0.7396,
+            "n": 8,
+            "recall@10": 0.6667,
+            "recall@5": 0.5417,
+            "recall@final": 0.6667
+          }
+        },
+        "overall": {
+          "mrr": 0.6571,
+          "n": 54,
+          "recall@10": 0.8981,
+          "recall@5": 0.7809,
+          "recall@final": 0.8981
+        }
+      },
+      "settings": {
+        "chunker": "syntax",
+        "graph": false,
+        "header": true,
+        "hyde": false,
+        "mode": "hybrid",
+        "name": "+rerank",
+        "rerank": "cross",
+        "rewrite": false
+      }
+    }
+  ],
+  "settings": {
+    "k_candidates": 20,
+    "top_k": 10
+  },
+  "suite": "flask"
+}
