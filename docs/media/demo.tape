@@ -34,7 +34,7 @@ Hide
 Type "clear" Enter
 Show
 
-Type 'clicr ask --explain "Where is the reranker applied?"' Sleep 500ms Enter
+Type 'clicr ask --explain "Which chunks does graph expansion add?"' Sleep 500ms Enter
 Wait+Screen /citations: \d+ valid/
 Sleep 1s
 Screenshot docs/media/explain.png
