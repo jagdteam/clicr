@@ -1,0 +1,16 @@
+.git
+.github
+.venv
+.lavish
+.pytest_cache
+.ruff_cache
+__pycache__
+*.pyc
+.clicr
+eval
+tasks
+tests
+.env
+.env.*
+docs/media/*.gif
+docs/media/*.png
