@@ -100,9 +100,9 @@ def test_empty_env_is_unset(monkeypatch):
     assert s.top_k == 6 and s.header is True
 
 
-def test_retrieval_switch_defaults_are_off():
+def test_retrieval_switch_defaults():
     s = load_settings(None, {})
-    assert (s.rerank, s.graph, s.hyde, s.abstain_threshold) == ("none", False, False, None)
+    assert (s.rerank, s.graph, s.hyde, s.abstain_threshold) == ("none", True, False, None)
     assert s.rerank_model == "Xenova/ms-marco-MiniLM-L-6-v2"
     assert (s.rerank_pool, s.graph_budget, s.context_tokens) == (30, 3, 5000)
 

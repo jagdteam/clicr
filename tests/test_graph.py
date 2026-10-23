@@ -182,6 +182,13 @@ def test_graph_skips_already_selected(store) -> None:
 
 
 def test_graph_off_is_noop(store) -> None:
-    res = _retrieve(store)
+    res = _retrieve(store, graph=False)
     assert [c.chunk.path for c in res.candidates] == ["a.py"]
     assert "graph" not in res.timings_ms
+
+
+def test_graph_is_on_by_default() -> None:
+    from clicr.config import Settings
+
+    assert Settings().graph is True
+    assert SearchConfig().graph is True
