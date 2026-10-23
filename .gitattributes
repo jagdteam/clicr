@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# VHS reads the tape inside a Linux container: keep LF on every checkout
+*.tape text eol=lf
+Dockerfile.* text eol=lf
