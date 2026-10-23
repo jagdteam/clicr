@@ -86,6 +86,34 @@ def test_render_without_answers_has_no_answer_line():
     assert "Answer track" not in report.render_section([data], DEFAULT)
 
 
+def test_rerank_is_described_as_a_side_branch():
+    text = report.render_section([_fixture()], DEFAULT)
+    assert "except `+rerank`, which is measured on top of `+hybrid`" in text
+
+
+def test_suites_ordered_by_answerable_questions_then_name():
+    def suite(name: str, n: int) -> dict:
+        data = _fixture()
+        data["suite"] = name
+        for r in data["rows"]:
+            r["metrics"]["overall"]["n"] = n
+        return data
+
+    text = report.render_section(
+        [suite("a-small", 18), suite("z-big", 54), suite("b-big", 54)], DEFAULT
+    )
+    heads = [line for line in text.splitlines() if line.startswith("### ")]
+    assert [h.split()[1] for h in heads] == ["b-big", "z-big", "a-small"]
+
+
+def test_heading_prints_commit_once_when_ref_equals_it():
+    data = _fixture()
+    data["ref"] = "22d9247"
+    text = report.render_section([data], DEFAULT)
+    assert "### flask (22d9247)" in text
+    assert "(3.1.3 @ 22d9247)" in report.render_section([_fixture()], DEFAULT)
+
+
 def test_replace_section_appends_markers_and_is_idempotent():
     readme = "# CliCR\n\nIntro.\n"
     once = report.replace_section(readme, "TABLE A")
