@@ -1,4 +1,4 @@
-"""Ablation rows: cumulative, ordered, and rewrite only on follow-ups."""
+"""Ablation rows: cumulative (rerank a side branch), ordered, and rewrite only on follow-ups."""
 
 from __future__ import annotations
 
@@ -22,14 +22,27 @@ def test_baseline_is_the_old_design():
 
 
 def test_rows_are_cumulative_one_change_each():
-    rows = [row.as_dict() for row in configs.ROWS]
+    rows = [row.as_dict() for row in configs.ROWS if row.name != "+rerank"]
     for before, after in zip(rows, rows[1:], strict=False):
         changed = [k for k in SWITCHES if before[k] != after[k]]
         assert len(changed) == 1, (before, after)
     last = configs.ROWS[-1]
     assert (last.chunker, last.header) == ("syntax", True)
-    assert (last.mode, last.rerank) == ("hybrid", "cross")
+    assert (last.mode, last.rerank) == ("hybrid", "none")
     assert last.graph and last.hyde and last.rewrite
+
+
+def test_rerank_is_a_side_branch_off_hybrid():
+    by_name = {row.name: row.as_dict() for row in configs.ROWS}
+    assert [r.name for r in configs.ROWS if r.rerank == "cross"] == ["+rerank"]
+    hybrid, rerank = by_name["+hybrid"], by_name["+rerank"]
+    assert rerank == {**hybrid, "name": "+rerank", "rerank": "cross"}
+    chain = [r.as_dict() for r in configs.ROWS if r.name != "+rerank"]
+    after = chain[chain.index(hybrid) + 1 :]
+    for before, row in zip(chain[chain.index(hybrid) :], after, strict=False):
+        changed = [k for k in SWITCHES if before[k] != row[k]]
+        assert len(changed) == 1, (before, row)
+        assert row["rerank"] == "none"
 
 
 def test_only_hyde_and_rewrite_need_chat():
@@ -56,7 +69,7 @@ def test_rewrite_history_only_for_follow_up_items():
 
 def test_search_config_follows_the_row():
     cfg = configs.search_config(configs.ROWS[5], top_k=10)
-    assert (cfg.mode, cfg.rerank, cfg.graph, cfg.hyde) == ("hybrid", "cross", True, False)
+    assert (cfg.mode, cfg.rerank, cfg.graph, cfg.hyde) == ("hybrid", "none", True, False)
     assert cfg.top_k == 10 and cfg.k_candidates >= 10
     assert cfg.abstain_threshold == float("-inf")  # signal recorded, never abstains
 

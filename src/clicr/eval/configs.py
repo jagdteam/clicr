@@ -1,4 +1,7 @@
-"""The ablation matrix: ordered, cumulative rows, and the embedders they run with."""
+"""The ablation matrix: ordered rows, and the embedders they run with.
+
+Rows are cumulative except `+rerank`, a side branch: the cross-encoders lowered Recall@5 and MRR.
+"""
 
 from __future__ import annotations
 
@@ -51,20 +54,23 @@ def _build() -> tuple[Row, ...]:
         hyde=False,
         rewrite=False,
     )
+    # (name, change, carry): carry=False measures the change on top of `current` without keeping it.
     steps = [
-        ("baseline", {}),
-        ("syntax", {"chunker": "syntax"}),
-        ("+header", {"header": True}),
-        ("+hybrid", {"mode": "hybrid"}),
-        ("+rerank", {"rerank": "cross"}),
-        ("+graph", {"graph": True}),
-        ("+hyde", {"hyde": True}),
-        ("+rewrite", {"rewrite": True}),
+        ("baseline", {}, True),
+        ("syntax", {"chunker": "syntax"}, True),
+        ("+header", {"header": True}, True),
+        ("+hybrid", {"mode": "hybrid"}, True),
+        ("+rerank", {"rerank": "cross"}, False),  # side branch: it lowers Recall@5 and MRR
+        ("+graph", {"graph": True}, True),
+        ("+hyde", {"hyde": True}, True),
+        ("+rewrite", {"rewrite": True}, True),
     ]
     rows = []
-    for name, change in steps:
-        current = {**current, **change}
-        rows.append(Row(name, **current))
+    for name, change, carry in steps:
+        row = {**current, **change}
+        rows.append(Row(name, **row))
+        if carry:
+            current = row
     return tuple(rows)
 
 
