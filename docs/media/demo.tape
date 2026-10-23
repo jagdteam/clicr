@@ -27,7 +27,8 @@ Type "clear" Enter
 Show
 
 Type 'clicr ask "How does clicr combine vector and keyword search?"' Sleep 500ms Enter
-Wait+Screen /citations: \d+ valid/
+# a long answer scrolls and Wait+Screen keeps reading the top rows: wait for the prompt
+Wait
 Sleep 1s
 Screenshot docs/media/ask.png
 Sleep 4s
@@ -37,7 +38,7 @@ Type "clear" Enter
 Show
 
 Type 'clicr ask --explain "Which chunks does graph expansion add?"' Sleep 500ms Enter
-Wait+Screen /citations: \d+ valid/
+Wait
 Sleep 1s
 Screenshot docs/media/explain.png
 Sleep 4s
