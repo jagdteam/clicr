@@ -44,17 +44,30 @@ def _cells(row: dict, context: bool = False) -> str:
     return " | ".join([*(_fmt(overall.get(k)) for k in keys), _fmt(p95, 1)])
 
 
-def _suite_section(results: dict, default: str) -> list[str]:
+def _shown_rows(results: dict, default: str) -> tuple[str, list[dict]]:
+    """The embedder the ablation table shows, and its rows."""
     rows = results.get("rows", [])
     embedders = list(dict.fromkeys(r["embedder"] for r in rows))
     shown = default if default in embedders else (embedders[0] if embedders else default)
+    return shown, [r for r in rows if r["embedder"] == shown]
+
+
+def _answerable(results: dict, default: str) -> int:
+    mine = _shown_rows(results, default)[1]
+    return (mine[0]["metrics"]["overall"].get("n") or 0) if mine else 0
+
+
+def _suite_section(results: dict, default: str) -> list[str]:
+    rows = results.get("rows", [])
+    shown, mine = _shown_rows(results, default)
     ref = results.get("ref") or ""
     commit = (results.get("commit") or "")[:7]
-    out = [f"### {results['suite']} ({ref} @ {commit})", ""]
-    mine = [r for r in rows if r["embedder"] == shown]
+    label = commit if ref == commit else f"{ref} @ {commit}"
+    out = [f"### {results['suite']} ({label})", ""]
     n = mine[0]["metrics"]["overall"].get("n") if mine else None
     out.append(
-        f"Ablation with embedder `{shown}`: each row adds one stage to the row above"
+        f"Ablation with embedder `{shown}`: each row adds one stage to the row above,"
+        f" except `+rerank`, which is measured on top of `+hybrid` and not carried into later rows"
         f" ({n} answerable questions)."
     )
     out += ["", ABLATION_COLUMNS]
@@ -97,7 +110,7 @@ def _suite_section(results: dict, default: str) -> list[str]:
 
 
 def render_section(results: Sequence[dict], default: str) -> str:
-    """Markdown for every suite, sorted by suite name."""
+    """Markdown for every suite: most answerable questions first, ties by suite name."""
     lines = [
         "## Evaluation results",
         "",
@@ -105,7 +118,7 @@ def render_section(results: Sequence[dict], default: str) -> str:
     ]
     if not results:
         lines += ["", "No evaluation results yet."]
-    for res in sorted(results, key=lambda r: r["suite"]):
+    for res in sorted(results, key=lambda r: (-_answerable(r, default), r["suite"])):
         lines += ["", *_suite_section(res, default)]
     return "\n".join(lines)
 
