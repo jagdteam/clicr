@@ -16,11 +16,11 @@ class SearchConfig:
     k_candidates: int = 20
     rrf_k: int = 60
     top_k: int = 6
-    # advanced stages: each one is off by default
+    # advanced stages: graph expansion is on by default (the eval chose it); the rest are off
     rerank: RerankKind = "none"
     rerank_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
     rerank_pool: int = 30
-    graph: bool = False
+    graph: bool = True
     graph_budget: int = 3
     hyde: bool = False
     abstain_threshold: float | None = None

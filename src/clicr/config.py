@@ -58,7 +58,7 @@ class Settings:
     rerank: str = "none"  # none | cross | llm
     rerank_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
     rerank_pool: int = 30
-    graph: bool = False
+    graph: bool = True
     graph_budget: int = 3
     hyde: bool = False
     abstain_threshold: float | None = None

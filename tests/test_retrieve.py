@@ -101,7 +101,7 @@ def test_modes(store, mode: str) -> None:
 
 
 def test_stage_timings_and_trace(store) -> None:
-    res = Retriever(store, EMB).retrieve("get user by id")
+    res = Retriever(store, EMB, cfg=SearchConfig(graph=False)).retrieve("get user by id")
     assert list(res.timings_ms) == ["embed_query", "vector", "keyword", "fuse", "select"]
     assert all(v >= 0 for v in res.timings_ms.values())
     assert "select" in res.candidates[0].trace and "fuse" in res.candidates[0].trace

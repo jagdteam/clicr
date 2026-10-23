@@ -13,7 +13,7 @@ Ask questions about a codebase from the terminal. CliCR indexes a folder on your
 - **Runs locally by default.** Chat and embeddings go through [Ollama](https://ollama.com), so your code stays on your machine. Claude is an optional chat provider.
 - **Splits code by structure.** tree-sitter cuts each file into functions and classes, and each chunk keeps its file, line range and enclosing symbol.
 - **Searches two ways.** Vector search finds code by meaning, BM25 keyword search (SQLite FTS5) finds exact identifiers, and reciprocal rank fusion (RRF) merges the two lists.
-- **Has switches for more precision.** A cross-encoder or LLM reranker, one-hop call-graph expansion, HyDE (search with a model-drafted snippet) and an abstain threshold are each off by default and each a flag.
+- **Has switches for more precision.** One-hop call-graph expansion is on by default because the eval showed it raises context recall. The cross-encoder or LLM reranker, HyDE (search with a model-drafted snippet) and the abstain threshold are off by default: the reranker lowered Recall@5 and MRR for every embedder and is slow on CPU, and HyDE lowered Recall@5. Each is a flag.
 - **Cites its sources.** Answers carry numbered citations that map to the retrieved code, and `--explain` shows how each candidate was ranked.
 - **Is measured.** `clicr eval` runs an ablation over every stage on pinned questions with known answers, so each stage has to earn its place.
 
@@ -77,7 +77,7 @@ clicr index --watch                       # keep running and re-index when files
 3. Run vector search and BM25 keyword search, 20 candidates each.
 4. Merge them with RRF.
 5. Optionally rerank the fused candidates (`--rerank cross` or `--rerank llm`).
-6. Optionally add the definitions of functions the top chunks call (`--graph`).
+6. Add the definitions of functions the top chunks call (on by default; `--no-graph` turns it off).
 7. Optionally answer "not found" when the best score is too low (`--abstain-threshold`).
 8. Pack the sources into a token budget: remove duplicates, merge neighbouring chunks, order by file.
 9. Ask the chat model for an answer that cites sources as `[n]`, then check that every cited number maps to a retrieved chunk.
@@ -131,7 +131,7 @@ Both TOML files use the setting names as keys, for example `top_k = 8`. Unknown 
 | `rerank` | `none` | `CLICR_RERANK` | `none`, `cross` (cross-encoder on CPU) or `llm`. |
 | `rerank_model` | `Xenova/ms-marco-MiniLM-L-6-v2` | `CLICR_RERANK_MODEL` | fastembed cross-encoder, used when `rerank` is `cross`. |
 | `rerank_pool` | `30` | `CLICR_RERANK_POOL` | Fused candidates the reranker scores (at least 1). |
-| `graph` | `false` | `CLICR_GRAPH` | Add definitions of functions the top chunks call (one hop). |
+| `graph` | `true` | `CLICR_GRAPH` | Add definitions of functions the top chunks call (one hop). |
 | `graph_budget` | `3` | `CLICR_GRAPH_BUDGET` | Most chunks the graph expansion may add (at least 0). |
 | `hyde` | `false` | `CLICR_HYDE` | Search with a model-drafted hypothetical snippet. |
 | `abstain_threshold` | unset (off) | `CLICR_ABSTAIN_THRESHOLD` | Answer "not found" when the best score is below this. |
