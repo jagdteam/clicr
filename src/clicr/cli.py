@@ -486,6 +486,15 @@ def eval_(
         str | None,
         typer.Option("--out", help="Results file (default: eval/results/<suite>.json)."),
     ] = None,
+    rerank_model: Annotated[
+        str | None,
+        typer.Option(
+            "--rerank-model",
+            help=(
+                "fastembed cross-encoder for the rerank rows (default: SearchConfig.rerank_model)."
+            ),
+        ),
+    ] = None,
 ) -> None:
     """Run retrieval and answer evaluations."""
     from clicr.eval.command import run_command
@@ -500,6 +509,7 @@ def eval_(
             judge=judge,
             check=check,
             out=out,
+            rerank_model=rerank_model,
             console=console,
         )
     raise typer.Exit(code=code)
