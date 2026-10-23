@@ -203,7 +203,8 @@ def test_results_schema(checkout: Path, tmp_path: Path, fake_clock):
     assert all(r["metrics"]["overall"]["recall@10"] == 1.0 for r in results["rows"])
     # rewrite runs only in the +rewrite row, only for the one follow-up item
     assert chat.calls.count(rewrite.SYSTEM) == 1
-    assert chat.calls.count(hyde.SYSTEM) == 2 * len(ITEMS)
+    # one draft per question, plus one for the rewritten follow-up; reused across rows
+    assert chat.calls.count(hyde.SYSTEM) == len(ITEMS) + 1
     abstain = results["abstain"]
     assert {"threshold", "precision", "recall", "f1", "metrics_at_threshold"} <= set(abstain)
 
@@ -396,6 +397,54 @@ def test_abstain_threshold_is_not_rounded():
     assert data["abstain"]["threshold"] == 0.123456789
     assert data["answers"]["abstain_threshold"] == -1.987654321
     assert data["abstain"]["f1"] == 0.1235
+
+
+# -- chat memo ----------------------------------------------------------------
+
+
+class RecordingChat(ScriptedChat):
+    def __init__(self) -> None:
+        super().__init__()
+        self.prompts: list[str] = []
+        self.streams: list[str] = []
+
+    def stream(self, messages: list[dict]):
+        self.streams.append(json.dumps(messages, sort_keys=True))
+        return super().stream(messages)
+
+    def complete(self, messages: list[dict]) -> str:
+        self.prompts.append(json.dumps(messages, sort_keys=True))
+        return super().complete(messages)
+
+
+def test_retrieval_chat_calls_are_cached_across_embedders_and_rows(
+    checkout: Path, tmp_path: Path, fake_clock
+):
+    chat = RecordingChat()
+    rows = [r for r in configs.ROWS if r.needs_chat]
+    runner.run_suite(
+        "tiny",
+        SUITE,
+        ITEMS,
+        source=checkout,
+        embedders=[EMBEDDER, "fastembed:other-model"],
+        rows=rows,
+        embedder_factory=lambda name: FakeEmbedder(64),
+        chat=chat,
+        reranker=OverlapReranker(),
+        index_root=tmp_path / "eval-index",
+        machine=MACHINE,
+    )
+    assert chat.prompts and len(chat.prompts) == len(set(chat.prompts))
+    assert chat.calls.count(hyde.SYSTEM) == len(ITEMS) + 1  # 4 questions + the rewritten one
+    assert chat.calls.count(rewrite.SYSTEM) == 1
+
+
+def test_answer_track_uses_the_raw_chat(checkout: Path, tmp_path: Path, fake_clock):
+    chat = RecordingChat()
+    results = _run(checkout, tmp_path, chat=chat, answers=True)
+    asked = [rec for rec in results["answers"]["items"] if not rec["abstained"]]
+    assert asked and len(chat.streams) == len(asked)  # one raw call per answered item
 
 
 # -- --rerank-model -------------------------------------------------------------
