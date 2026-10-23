@@ -6,6 +6,10 @@ Ask questions about a codebase from the terminal. CliCR indexes a folder on your
 
 <!-- media:demo -->
 
+![Terminal demo: clicr indexes its own repository, answers a question with cited code panels, then shows the --explain ranking table](docs/media/demo.gif)
+
+*Recorded with VHS in Docker and played back at 3x: answers come from qwen2.5-coder:7b running locally on a power-limited laptop GPU.*
+
 <!-- link:web-demo -->
 
 ## What it does
