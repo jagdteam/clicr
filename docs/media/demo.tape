@@ -9,7 +9,9 @@ Set FontSize 18
 Set Padding 20
 Set TypingSpeed 45ms
 # Local 7B answers can be slow; Wait fails after this long.
-Set WaitTimeout 180s
+Set WaitTimeout 420s
+# The local 7B model is slow on a power-limited laptop GPU: play back at 3x (the README says so)
+Set PlaybackSpeed 3
 
 Hide
 Type "export CLICR_HOME=/tmp/clicr-home" Enter
