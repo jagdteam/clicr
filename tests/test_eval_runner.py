@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import itertools
 import json
+import re
 import time
 from pathlib import Path
 
@@ -344,10 +345,12 @@ def test_cli_eval_rejects_unknown_suite():
 def test_cli_eval_help_lists_options():
     res = CliRunner().invoke(app, ["eval", "--help"])
     assert res.exit_code == 0
+    # Rich colours the help on CI (GITHUB_ACTIONS) and styles "-" and "-suite" apart
+    text = re.sub(r"\x1b\[[0-9;]*m", "", res.output)
     for flag in ("--suite", "--retrieval-only", "--embedders", "--configs", "--answers"):
-        assert flag in res.output
-    for flag in ("--judge", "--check", "--out"):
-        assert flag in res.output
+        assert flag in text
+    for flag in ("--judge", "--check", "--out", "--rerank-model"):
+        assert flag in text
 
 
 # -- review fixes ---------------------------------------------------------------
