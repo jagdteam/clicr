@@ -338,14 +338,18 @@ def _row_result(row: Row, spec: str, records: list[dict]) -> dict:
 
 
 def _best_row(rows: list[dict]) -> dict | None:
-    """Highest overall Recall@10, then MRR; ties keep the earlier row."""
+    """Highest overall Recall@5, then MRR, then Context recall; ties keep the earlier row.
+
+    Recall@5 because `clicr ask` sends top_k=6 chunks to the model.
+    """
     if not rows:
         return None
     best = max(
         enumerate(rows),
         key=lambda pair: (
-            pair[1]["metrics"]["overall"]["recall@10"],
+            pair[1]["metrics"]["overall"]["recall@5"],
             pair[1]["metrics"]["overall"]["mrr"],
+            pair[1]["metrics"]["overall"]["recall@final"],
             -pair[0],
         ),
     )[1]
