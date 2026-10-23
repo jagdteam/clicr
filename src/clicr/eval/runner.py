@@ -15,7 +15,7 @@ import json
 import math
 import platform
 import subprocess
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Iterator, Sequence
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -111,6 +111,24 @@ def index_dir(
     return Path(index_root) / f"{suite}-{commit[:7]}-{key}"
 
 
+class _MemoChat:
+    """Cache chat calls by message list: same question, same draft across embedders and rows."""
+
+    def __init__(self, chat: ChatModel) -> None:
+        self._chat = chat
+        self._cache: dict[str, str] = {}
+        self.name = chat.name
+
+    def complete(self, messages: list[dict]) -> str:
+        key = json.dumps(messages, sort_keys=True)
+        if key not in self._cache:
+            self._cache[key] = self._chat.complete(messages)
+        return self._cache[key]
+
+    def stream(self, messages: list[dict]) -> Iterator[str]:
+        yield self.complete(messages)
+
+
 def _span_label(span: metrics.Span) -> str:
     return f"{span[0]}:{span[1]}-{span[2]}"
 
@@ -193,6 +211,7 @@ def run_suite(
     records: list[dict] = []
     row_results: list[dict] = []
     embedder_cache: dict[str, Embedder] = {}
+    retrieval_chat = _MemoChat(chat) if chat is not None else None
 
     def embedder_for(spec: str) -> Embedder:
         if spec not in embedder_cache:
@@ -208,7 +227,7 @@ def run_suite(
                     retriever = Retriever(
                         store,
                         embedder,
-                        chat if row.needs_chat else None,
+                        retrieval_chat if row.needs_chat else None,
                         search_config(row, top_k),
                         rewrite=row.rewrite,
                         reranker=reranker if row.rerank == "cross" else None,
