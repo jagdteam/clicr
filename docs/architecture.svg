@@ -70,7 +70,7 @@
 <text x="610.0" y="305" font-size="12" fill="#475569">read</text>
 <path d="M330 240 H30 V491.0 H45" fill="none" stroke="#475569" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ar)"/>
 <text x="36" y="226" font-size="12" fill="#475569">graph reads symbols + refs</text>
-<text x="45" y="594" font-size="13" fill="#334155">Optional stages (off by default): HyDE, rerank, graph expansion, abstain. Rewrite runs in clicr chat on follow-up questions.</text>
+<text x="45" y="594" font-size="13" fill="#334155">Graph expansion is on by default; HyDE, rerank and abstain are switches, off by default. Rewrite runs in clicr chat on follow-up questions.</text>
 <text x="45" y="618" font-size="13" fill="#334155">Chat and embedding models are swappable: Ollama (default), fastembed on CPU, or Claude for chat (optional extra).</text>
-<text x="45" y="642" font-size="13" fill="#334155">Dashed arrow: optional read. Solid arrows: data flow.</text>
+<text x="45" y="642" font-size="13" fill="#334155">Dashed arrow: graph expansion reads the call graph. Solid arrows: data flow.</text>
 </svg>
