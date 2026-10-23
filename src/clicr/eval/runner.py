@@ -270,7 +270,9 @@ def run_suite(
             "embedders": list(embedders),
             "chat": chat.name if chat is not None else None,
             "reranker": (
-                SearchConfig().rerank_model if any(r.rerank == "cross" for r in rows) else None
+                getattr(reranker, "model", None) or SearchConfig().rerank_model
+                if any(r.rerank == "cross" for r in rows)
+                else None
             ),
             "judge": judge.name if judge is not None else None,
         },

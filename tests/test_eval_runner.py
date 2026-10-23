@@ -396,3 +396,89 @@ def test_abstain_threshold_is_not_rounded():
     assert data["abstain"]["threshold"] == 0.123456789
     assert data["answers"]["abstain_threshold"] == -1.987654321
     assert data["abstain"]["f1"] == 0.1235
+
+
+# -- --rerank-model -------------------------------------------------------------
+
+
+class _NamedReranker(OverlapReranker):
+    def __init__(self, model: str) -> None:
+        self.model = model
+
+
+def _rerank_run(checkout: Path, tmp_path: Path, **flags):
+    suites, datasets = _write_suite(tmp_path)
+    hooks = command.Hooks(
+        checkout=lambda name, suite: checkout,
+        embedder_factory=lambda name: FakeEmbedder(64),
+        chat_factory=ScriptedChat,
+        judge_factory=ScriptedChat,
+        index_root=tmp_path / "eval-index",
+        machine=MACHINE,
+    )
+    out = tmp_path / "results" / "tiny.json"
+    with Console(file=open(tmp_path / "console.txt", "w", encoding="utf-8"), width=200) as console:  # noqa: SIM115
+        code = command.run_command(
+            "tiny",
+            retrieval_only=True,
+            embedders=EMBEDDER,
+            configs="+rerank",
+            answers=False,
+            judge=False,
+            check=False,
+            out=str(out),
+            console=console,
+            suites_file=suites,
+            dataset_dir=datasets,
+            hooks=hooks,
+            **flags,
+        )
+    return code, out
+
+
+def _supported_rerank_models() -> list[str]:
+    from fastembed.rerank.cross_encoder import TextCrossEncoder
+
+    return [entry["model"] for entry in TextCrossEncoder.list_supported_models()]
+
+
+def test_rerank_model_option_reaches_reranker_and_results(
+    checkout: Path, tmp_path: Path, fake_clock, monkeypatch
+):
+    name = _supported_rerank_models()[-1]
+    monkeypatch.setattr(command, "CrossEncoderReranker", _NamedReranker)
+    code, out = _rerank_run(checkout, tmp_path, rerank_model=name)
+    assert code == 0
+    assert json.loads(out.read_text(encoding="utf-8"))["models"]["reranker"] == name
+
+
+def test_rerank_model_unknown_name_is_a_user_error(checkout: Path, tmp_path: Path):
+    from clicr.ui.errors import UserError
+
+    with pytest.raises(UserError, match="not-a-model") as exc:
+        _rerank_run(checkout, tmp_path, rerank_model="not-a-model")
+    assert _supported_rerank_models()[0] in str(exc.value)
+
+
+def test_results_reranker_defaults_to_search_config(checkout: Path, tmp_path: Path, fake_clock):
+    from clicr.retrieve.search import SearchConfig
+
+    cross = [r for r in configs.ROWS if r.rerank == "cross"]
+
+    def run(path: Path, reranker) -> dict:
+        return runner.run_suite(
+            "tiny",
+            SUITE,
+            ITEMS,
+            source=checkout,
+            embedders=[EMBEDDER],
+            rows=cross,
+            embedder_factory=lambda name: FakeEmbedder(64),
+            chat=ScriptedChat(),
+            reranker=reranker,
+            index_root=path / "eval-index",
+            machine=MACHINE,
+        )
+
+    assert run(tmp_path, OverlapReranker())["models"]["reranker"] == SearchConfig().rerank_model
+    assert run(tmp_path / "n", _NamedReranker("some/model"))["models"]["reranker"] == "some/model"

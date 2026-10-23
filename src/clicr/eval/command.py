@@ -18,7 +18,7 @@ from clicr.eval.check import TOLERANCE, compare_results
 from clicr.eval.suites import DATASET_DIR, RESULTS_DIR, SUITES_FILE, ensure_checkout, load_items
 from clicr.eval.suites import load_suites as _load_suites
 from clicr.providers.base import ChatModel, Embedder
-from clicr.retrieve.rerank import Reranker
+from clicr.retrieve.rerank import CrossEncoderReranker, Reranker
 from clicr.ui.errors import UserError
 
 
@@ -56,6 +56,14 @@ def _default_judge() -> ChatModel:
 
         return FakeChat()
     raise UserError("The judge runs on the local Ollama chat model (temperature 0).")
+
+
+def _check_rerank_model(name: str) -> None:
+    from fastembed.rerank.cross_encoder import TextCrossEncoder
+
+    valid = sorted(entry["model"] for entry in TextCrossEncoder.list_supported_models())
+    if name not in valid:
+        raise UserError(f"Unknown rerank model {name!r}; known: {', '.join(valid)}")
 
 
 def _fill(hooks: Hooks) -> Hooks:
@@ -151,6 +159,7 @@ def run_command(
     judge: bool,
     check: bool,
     out: str | None,
+    rerank_model: str | None = None,
     console: Console,
     suites_file: Path = SUITES_FILE,
     dataset_dir: Path = DATASET_DIR,
@@ -190,6 +199,10 @@ def run_command(
             return 1
 
     hooks = _fill(hooks or Hooks())
+    if rerank_model is not None:
+        _check_rerank_model(rerank_model)
+        if hooks.reranker is None:
+            hooks.reranker = CrossEncoderReranker(rerank_model)
     assert hooks.embedder_factory and hooks.chat_factory and hooks.judge_factory
     assert hooks.index_root is not None
     needs_chat = answers or any(r.needs_chat for r in rows)
