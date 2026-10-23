@@ -11,6 +11,7 @@ Ask questions about a codebase from the terminal. CliCR indexes a folder on your
 *Recorded with VHS in Docker and played back at 3x: answers come from qwen2.5-coder:7b running locally on a power-limited laptop GPU.*
 
 <!-- link:web-demo -->
+**[Try it in your browser](https://wood-o7.vercel.app/projects/clicr/demo/)**: the same hybrid search over Flask's source, running on your device.
 
 ## What it does
 
