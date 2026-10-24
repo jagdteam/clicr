@@ -10,6 +10,10 @@ Ask questions about a codebase from the terminal. CliCR indexes a folder on your
 
 *Recorded with VHS in Docker and played back at 3x: answers come from qwen2.5-coder:7b running locally on a power-limited laptop GPU.*
 
+![A clicr ask answer to "How does clicr combine vector and keyword search?" with numbered citations](docs/media/ask.png)
+
+![The clicr ask --explain table: vector, keyword and fused rank for every candidate, plus graph-added chunks](docs/media/explain.png)
+
 <!-- link:web-demo -->
 **[Try it in your browser](https://wood-o7.vercel.app/projects/clicr/demo/)**: the same hybrid search over Flask's source, running on your device.
 
@@ -63,6 +67,8 @@ clicr index --watch                       # keep running and re-index when files
 ```
 
 `clicr doctor --fix` downloads missing tree-sitter grammars. In `clicr chat`, type `/help` for the slash commands. Output is plain text when piped, or with `--plain`.
+
+More flags: `--mode vector|keyword` on `ask` and `chat` turns off one half of the search (default `hybrid`), `--path <folder>` on `ask` and `chat` asks about a folder other than `.`, and `clicr index --rebuild` discards the existing index and starts over.
 
 ## How it works
 
@@ -172,7 +178,7 @@ Answer track (`ollama:qwen2.5-coder:7b` on `syntax`, `ollama:qwen3-embedding:0.6
   - `Xenova/ms-marco-MiniLM-L-6-v2`: 0.793 / 0.633 / 6196.5
   - `Xenova/ms-marco-MiniLM-L-12-v2`: 0.781 / 0.657 / 10763.6
   - `jinaai/jina-reranker-v1-turbo-en`: 0.759 / 0.644 / 7549.8
-  - `jinaai/jina-reranker-v2-base-multilingual` was stopped after 37 of 60 questions: the eval process grew past 11 GB of RAM at about 70 s per question on CPU. `BAAI/bge-reranker-base` (same model size class) was not run. Neither fits an interactive CPU tool.
+  - `jinaai/jina-reranker-v2-base-multilingual` was stopped after 37 of 60 questions: the eval process grew past 11 GB of RAM at about 70 s per question on CPU. `BAAI/bge-reranker-base` (same model size class) was not run. No results file is committed for either, so there are no numbers to quote. Neither fits an interactive CPU tool.
 - HyDE and rewrite latency: the drafts come from `ollama:qwen2.5-coder:7b` on a laptop GPU (Quadro RTX 4000 Max-Q) that was power-limited to 30 W during the run, so those p95 numbers are high. Drafts are cached across embedders and rows (same question, same draft), so only the first embedder in the run (`ollama:embeddinggemma`, the one in the ablation table) pays the drafting time. The `+hyde` and `+rewrite` latencies for the other embedders are not comparable.
 - The abstain threshold is off by default. In the answer track the model itself answered "not found" on every unanswerable question (6 of 6 on `flask`, 2 of 2 on `clicr`) and on 5.6% of answerable `flask` questions. The calibrated cosine threshold on `flask` has precision 0.625, so it would also refuse some answerable questions.
 - Best row rule: highest Recall@5, then MRR, then context recall. It picks the row for abstain calibration and the answer track. The best row for `clicr` is `syntax` with `ollama:qwen3-embedding:0.6b`, so its answer track ran there.
@@ -228,7 +234,17 @@ Booleans accept `true`, `false`, `yes`, `no`, `on`, `off`, `1` and `0`. `CLICR_H
 
 ## Browser demo
 
-`clicr export-web --path <folder> --out <folder>` writes a static bundle (chunks, int8 vectors, BM25 postings and the call graph) from an index built with the `fastembed` provider. The demo page needs no server: it embeds your question in the browser with transformers.js, runs the same hybrid search, and can optionally generate an answer with WebLLM on browsers that support WebGPU.
+`clicr export-web` writes a static bundle (chunks, int8 vectors, BM25 postings and the call graph) from an index built with the `fastembed` provider. The demo page needs no server: it embeds your question in the browser with transformers.js, runs the same hybrid search, and can optionally generate an answer with WebLLM on browsers that support WebGPU.
+
+```
+clicr index <folder> --embed-provider fastembed
+clicr export-web --path <folder> --out web-bundle [--questions q.json] [--record] [--parity-suite flask] [--max-mb 3.0]
+```
+
+- `--questions` takes a JSON list of suggested questions (strings or objects).
+- `--record` answers each question with the chat model and keeps the answer in the bundle.
+- `--parity-suite` pins the source to an eval suite and writes `parity.json`.
+- The export fails if the bundle is larger than `--max-mb` (default 3.0).
 
 ## Development
 
@@ -257,6 +273,14 @@ src/clicr/
   eval/             metrics, ablation configs, runner, judge, report
   ui/               Rich rendering and error messages
 ```
+
+## Limitations
+
+- Answer quality depends on the local 7B model. On `flask`, citation accuracy is 0.826, and the model answered "not found" on 5.6% of answerable questions.
+- It needs Ollama, or the `fastembed` CPU provider for embeddings (`--embed-provider fastembed`).
+- The eval sets are small (54 and 18 answerable questions) and were run on one machine, so small differences are noise.
+- The abstain threshold has precision 0.625 on `flask`, so it is off by default.
+- The LLM judge is the same local model family as the answerer, so its scores are biased.
 
 ## License
 
