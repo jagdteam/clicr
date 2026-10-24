@@ -278,7 +278,7 @@ src/clicr/
 
 - Answer quality depends on the local 7B model. On `flask`, citation accuracy is 0.826, and the model answered "not found" on 5.6% of answerable questions.
 - It needs Ollama, or the `fastembed` CPU provider for embeddings (`--embed-provider fastembed`).
-- The eval sets are small (54 and 18 answerable questions) and were run on one machine, so small differences are noise.
+- The eval sets are small (54 and 18 answerable questions) and were run on one machine, so small differences may be noise.
 - The abstain threshold has precision 0.625 on `flask`, so it is off by default.
 - The LLM judge is the same local model family as the answerer, so its scores are biased.
 
