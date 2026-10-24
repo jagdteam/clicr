@@ -70,6 +70,30 @@ def _texts(store: IndexStore) -> list[str]:
     return [search_terms(_fts_text(c)) for _, c in store.get_chunks([int(r) for r in rowids])]
 
 
+def test_files_json_holds_every_chunked_file(indexed, tmp_path: Path):
+    root, _ = indexed
+    out = tmp_path / "bundle"
+    manifest = _export(root, out, source={"name": "demo", "include": "src/pkg"})
+    files = _read(out, "files.json")
+    chunks = _read(out, "chunks.json")
+    assert set(files) == {c["path"] for c in chunks}
+    for c in chunks:
+        lines = files[c["path"]].split("\n")
+        assert "\n".join(lines[c["start"] - 1 : c["end"]]) == c["text"], c["path"]
+    assert manifest["files"]["files.json"] == (out / "files.json").stat().st_size
+
+
+def test_files_json_normalises_crlf(indexed, tmp_path: Path):
+    root, store = indexed
+    (root / "crlf.py").write_bytes(b"def crlf():\r\n    return 1\r\n")
+    update_index(root, store, SyntaxChunker(max_lines=120), EMB)
+    out = tmp_path / "bundle"
+    _export(root, out)
+    files = _read(out, "files.json")
+    assert files["crlf.py"] == "def crlf():\n    return 1\n"
+    assert all("\r" not in text for text in files.values())
+
+
 def test_file_set_and_manifest(indexed, tmp_path: Path):
     root, store = indexed
     out = tmp_path / "bundle"
@@ -77,6 +101,7 @@ def test_file_set_and_manifest(indexed, tmp_path: Path):
     assert sorted(p.name for p in out.iterdir()) == [
         "bm25.json",
         "chunks.json",
+        "files.json",
         "graph.json",
         "manifest.json",
         "vectors.bin",
