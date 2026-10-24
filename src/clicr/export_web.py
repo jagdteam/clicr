@@ -4,6 +4,7 @@ The bundle (all JSON is UTF-8, compact, keys sorted):
 
     manifest.json   format, source, embed settings, counts, BM25 and fusion settings, file sizes
     chunks.json     [{i, path, start, end, symbol, lang, text}] in rowid order
+    files.json      {repo path: full LF text} for every file that has a chunk
     vectors.bin     int8, row-major n_chunks x dim; value = round(v * 127), v the stored
                     L2-normalised vector (cosine = dot product / 127^2 on dequantised values)
     bm25.json       {doc_len: [...], postings: {key: [[i, tf], ...]}}
@@ -61,6 +62,7 @@ import numpy as np
 from clicr import __version__
 from clicr.index.store import IndexStore, _fts_text
 from clicr.index.textsplit import search_terms
+from clicr.ingest.chunkers import normalize_newlines
 from clicr.paths import index_dir_for
 from clicr.providers.base import Embedder
 from clicr.retrieve.pipeline import Retriever
@@ -312,12 +314,17 @@ def export_web(
         found = dict(store.get_chunks([int(r) for r in rowids]))
         chunks = []
         texts = []
+        full: dict[str, str] = {}
         for i, rid in enumerate(rowids):
             c = found[int(rid)]
+            repo_path = _repo_path(include, c.path)
+            if repo_path not in full:
+                raw = (root / c.path).read_bytes().decode("utf-8", "replace")
+                full[repo_path] = normalize_newlines(raw)
             chunks.append(
                 {
                     "i": i,
-                    "path": _repo_path(include, c.path),
+                    "path": repo_path,
                     "start": c.start_line,
                     "end": c.end_line,
                     "symbol": c.symbol,
@@ -332,6 +339,7 @@ def export_web(
 
         files: dict[str, bytes] = {
             "chunks.json": _dump(chunks),
+            "files.json": _dump(full),
             "vectors.bin": quant.tobytes(),
             "bm25.json": _dump(bm25),
             "graph.json": _dump(graph),
