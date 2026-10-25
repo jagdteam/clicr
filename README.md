@@ -241,7 +241,7 @@ clicr index <folder> --embed-provider fastembed
 clicr export-web --path <folder> --out web-bundle [--questions q.json] [--record] [--parity-suite flask] [--max-mb 3.0]
 ```
 
-- `--questions` takes a JSON list of suggested questions (strings or objects).
+- `--questions` takes a JSON list of suggested questions (strings or objects) and also writes `qvecs.bin`, their stored vectors, so a suggested question runs without downloading the embedding model.
 - `--record` answers each question with the chat model and keeps the answer in the bundle.
 - `--parity-suite` pins the source to an eval suite and writes `parity.json`.
 - The export fails if the bundle is larger than `--max-mb` (default 3.0).

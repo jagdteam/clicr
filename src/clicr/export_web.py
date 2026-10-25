@@ -10,6 +10,9 @@ The bundle (all JSON is UTF-8, compact, keys sorted):
     bm25.json       {doc_len: [...], postings: {key: [[i, tf], ...]}}
     graph.json      {refs: {i: [names]}, defs: {name: [i, ...]}}
     questions.json  suggested questions, with recorded answers when given
+    qvecs.bin       (only with questions) float32 little-endian, row-major n_questions x dim: the
+                    query embedding of each question, in questions.json order, so the browser can
+                    run a suggested question without loading the embedding model
     parity.json     (only with a parity suite) Python's answers for the browser self-test
 
 `i` is the chunk's position in rowid order (0-based), the index into chunks.json and the
@@ -350,6 +353,16 @@ def export_web(
             if answerer is not None:
                 entries = [record_answer(answerer, e["question"], include) for e in entries]
             files["questions.json"] = _dump(entries)
+            if entries:
+                qemb = embedder_factory(stored)
+                qmat = np.vstack(
+                    [np.asarray(qemb.embed_query(e["question"]), dtype=np.float32) for e in entries]
+                )
+            else:
+                qmat = np.zeros((0, dim), dtype=np.float32)
+            if qmat.shape[1] != dim:
+                raise inconsistent
+            files["qvecs.bin"] = qmat.astype("<f4").tobytes()
         elif answerer is not None:
             raise UserError("--record needs --questions.")
 

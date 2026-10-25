@@ -250,6 +250,51 @@ def test_questions_plain_and_recorded(indexed, tmp_path: Path):
     assert set(rec["sources"][0]) == {"path", "start", "end"}
 
 
+def test_qvecs_only_with_questions_and_match_query_embedding(indexed, tmp_path: Path):
+    root, store = indexed
+    plain = tmp_path / "none"
+    _export(root, plain)
+    assert not (plain / "qvecs.bin").exists()
+    assert "qvecs.bin" not in _read(plain, "manifest.json")["files"]
+
+    asked = ["How do I get a user?", {"question": "Q2", "answer": "A2"}, "fmt Println server"]
+    out = tmp_path / "q"
+    manifest = _export(root, out, questions=asked)
+    raw = (out / "qvecs.bin").read_bytes()
+    assert len(raw) == 3 * EMB.dim * 4
+    assert manifest["files"]["qvecs.bin"] == len(raw)
+    rows = np.frombuffer(raw, dtype="<f4").reshape(3, EMB.dim)
+    names = [e["question"] for e in _read(out, "questions.json")]
+    for row, name in zip(rows, names, strict=True):
+        assert np.allclose(row, EMB.embed_query(name))
+
+
+@pytest.mark.fastembed
+def test_qvecs_match_real_fastembed_query_embedding(tmp_path: Path, sample_repo: Path, monkeypatch):
+    from clicr.providers.fastembed import FastEmbedEmbedder
+
+    monkeypatch.setenv("CLICR_HOME", str(tmp_path / "home"))
+    emb = FastEmbedEmbedder()
+    chunker = SyntaxChunker(max_lines=120)
+    store = IndexStore.open(
+        index_dir_for(sample_repo),
+        embedder_name=emb.name,
+        dim=emb.dim,
+        chunker_name=chunker.name,
+        header=True,
+    )
+    try:
+        update_index(sample_repo, store, chunker, emb)
+    finally:
+        store.close()
+    out = tmp_path / "real"
+    q = ["How do I get a user?", "where is Println used"]
+    export_web(sample_repo, out, embedder_factory=lambda name: emb, questions=q)
+    rows = np.frombuffer((out / "qvecs.bin").read_bytes(), dtype="<f4").reshape(2, emb.dim)
+    for row, text in zip(rows, q, strict=True):
+        assert np.allclose(row, emb.embed_query(text), atol=1e-6)
+
+
 def test_size_cap_fails_and_names_files(indexed, tmp_path: Path):
     root, _ = indexed
     with pytest.raises(UserError, match=r"over the 0\.001 MB limit.*vectors\.bin"):
