@@ -1,0 +1,127 @@
+{
+  "disableSkillShellExecution": true,
+  "isolatePeerMachines": true,
+  "permissions": {
+    "allow": [
+      "Bash(sed -n *)",
+      "Bash(grep *)",
+      "Bash(git status *)",
+      "Bash(node --test *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(wc *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(git show *)",
+      "Bash(uv run pytest*)",
+      "Bash(uv run ruff*)",
+      "Bash(uv run clicr doctor*)"
+    ],
+    "ask": [
+      "Bash(git push*)",
+      "Bash(git commit*)",
+      "Bash(rm *)",
+      "Bash(uv add*)",
+      "Bash(pip install*)",
+      "Bash(gh pr create*)",
+      "Bash(gh pr merge*)",
+      "Bash(gh api*)",
+      "Bash(curl -X POST*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push --force-with-lease*)",
+      "Bash(git push origin main*)",
+      "Bash(git push origin master*)",
+      "Bash(git branch -D*)",
+      "Bash(rm -rf*)",
+      "Bash(rm -fr*)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.config/gh/**)",
+      "Read(~/.git-credentials)",
+      "Read(~/.kube/**)",
+      "Read(~/.npmrc)",
+      "Read(~/.pypirc)"
+    ]
+  },
+  "env": {
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
+    "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "3"
+  },
+  "enableAllProjectMcpServers": false,
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-push.mjs\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/shrink-test-output.mjs\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/block-rm.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/lint-typecheck.mjs\"",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/done-gate.mjs\"",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "timeout": 30,
+            "prompt": "You are a strict completion reviewer. Below is the hook input JSON for a Claude Code turn that is about to stop. Read the last assistant message. Reply with JSON only: {\"ok\": true} if the work is genuinely finished or the message honestly reports what is unfinished. Reply {\"ok\": false, \"reason\": \"<one sentence naming what is unfinished>\"} if the message claims completion while it admits, implies or rationalises unfinished work: phrases like 'good enough', 'left as a follow-up', 'out of scope', 'pre-existing', 'should work', 'not tested' next to a done claim, or stubs/TODOs described as done. Input: $ARGUMENTS"
+          }
+        ]
+      }
+    ]
+  }
+}
