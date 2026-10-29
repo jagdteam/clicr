@@ -3,7 +3,7 @@
 // Blocks `git push` to main/master, force pushes, mass pushes and branch deletes.
 // Exit 0 = allow, exit 2 = block (stderr goes to Claude). Fails open on any
 // internal error, with one stderr warning line. Node stdlib only, POSIX friendly.
-// Exception (Johnny's own private projects): when the ONLY problem is the protected
+// Exception (the owner's own private projects): when the ONLY problem is the protected
 // target (main/master) and the session has a main-go marker (fleet main-go.mjs grant),
 // the push is allowed. Force, delete, mirror and all are blocked regardless.
 // Self-contained on purpose: this file is copied into repos' .claude/hooks/.
@@ -65,8 +65,9 @@ function currentBranch() {
 
 // ---- main-go marker (inline copy of fleet/main-go.mjs check; keep in step) ----
 const SESSION_RE = /^[A-Za-z0-9-]{8,80}$/;
-const FLEET_DIR = 'C:\\Users\\johnn\\personal\\fleet';
-const stateDir = () => process.env.FLEET_STATE_DIR || path.join(FLEET_DIR, 'state');
+// Set FLEET_DIR (the fleet folder on the laptop) to enable the main-go exception; unset = guard stays strict.
+const FLEET_DIR = process.env.FLEET_DIR || '';
+const stateDir = () => process.env.FLEET_STATE_DIR || (FLEET_DIR ? path.join(FLEET_DIR, 'state') : '');
 const projectDir = () => process.env.CLAUDE_PROJECT_DIR || process.cwd();
 
 function normaliseRemote(url) {
@@ -86,13 +87,14 @@ const sameDir = (a, b) => {
 };
 
 function stateDirExists() {
+  if (!stateDir()) return false;
   try { return fs.statSync(stateDir()).isDirectory(); } catch { return false; }
 }
 
 // True only if a marker exists for this session + this repo and the repo's origin is still an own project.
 function mainGoGranted(session) {
   try {
-    if (!SESSION_RE.test(session || '')) return false;
+    if (!FLEET_DIR || !SESSION_RE.test(session || '')) return false;
     const dir = projectDir();
     const r = spawnSync('git', ['-C', dir, 'config', '--get', 'remote.origin.url'], { encoding: 'utf8' });
     if (r.error || r.status !== 0 || !r.stdout.trim()) return false;
@@ -149,10 +151,10 @@ try {
   for (const args of pushArgs(command)) {
     const found = checkPush(args);
     if (found) {
-      if (found.protectedOnly && mainGoGranted(input.session_id)) continue; // Johnny's go for this session
+      if (found.protectedOnly && mainGoGranted(input.session_id)) continue; // the owner's go for this session
       let hint = '';
-      if (process.platform === 'win32' && found.protectedOnly && SESSION_RE.test(input.session_id || '') && stateDirExists()) {
-        hint = ` If Johnny gave this session the go for main (own private project only), record it with: node C:/Users/johnn/personal/fleet/main-go.mjs grant --session ${input.session_id} --repo ${projectDir()}`;
+      if (found.protectedOnly && SESSION_RE.test(input.session_id || '') && stateDirExists()) {
+        hint = ` If the owner gave this session the go for main (own private project only), set FLEET_DIR and grant with main-go.mjs on the laptop (session ${input.session_id}, repo ${projectDir()}).`;
       }
       fs.writeSync(2,
         `Push blocked by the fleet push guard: ${found.reason}. This repo may lack GitHub branch protection, so pushes to main/master, force-pushes and branch deletes are forbidden. Push a claude/ branch instead and open a PR. Do not try to work around this.${hint}\n`);
